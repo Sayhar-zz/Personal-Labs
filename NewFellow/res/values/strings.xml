@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">""</string>
+    <string name="app_name">NewFellow</string>
+ 	<string name="goAddNew">Add a new contact</string>
+ 	<string name="goSeeNearest">See who is nearby</string>
+ 	<string name="request">Request!</string>
+ 	
+</resources>
