@@ -45,7 +45,7 @@ public class AddFriends extends Activity implements OnClickListener {
 	private Button addToDB;
 	private Geocoder geocoder;
 	private TextView tv1;
-
+	private TextView tvname;
 	private final int MAXRESULTS = 5;
 
 	// String addressList[] = new String[MAXRESULTS];
@@ -73,6 +73,7 @@ public class AddFriends extends Activity implements OnClickListener {
 		etaddress = (EditText) findViewById(R.id.friendaddress);
 		geocoder = new Geocoder(this);
 		
+		tvname = (TextView) findViewById(R.id.nametext);
 		tv1 = (TextView) findViewById(R.id.textView1);
 		addToDB.setOnClickListener(this);
 		
@@ -85,6 +86,8 @@ public class AddFriends extends Activity implements OnClickListener {
 		
 		first = names[0];
 		last = names[names.length -1];
+		
+		tvname.setText(first + " " + last);
 		
 		
 		spincheck
