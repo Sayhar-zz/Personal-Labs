@@ -40,7 +40,7 @@ public class AddFriends extends Activity implements OnClickListener {
 	 
 	 
 	private EditText etaddress;
-	private EditText etname;
+	
 	private Spinner spincheck;
 	private Button addToDB;
 	private Geocoder geocoder;
@@ -58,6 +58,8 @@ public class AddFriends extends Activity implements OnClickListener {
 	private Facebook mFacebook;
 	private AsyncFacebookRunner mAsyncRunner;
 	
+	private String first;
+	private String last;
 	
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -70,13 +72,17 @@ public class AddFriends extends Activity implements OnClickListener {
 		addToDB = (Button) findViewById(R.id.friendDbAdd);
 		etaddress = (EditText) findViewById(R.id.friendaddress);
 		geocoder = new Geocoder(this);
-		etname = (EditText) findViewById(R.id.friendname);
+		
 		tv1 = (TextView) findViewById(R.id.textView1);
 		addToDB.setOnClickListener(this);
 		
 		mFacebook = new Facebook(APP_ID);
 	   	mAsyncRunner = new AsyncFacebookRunner(mFacebook);
 		SessionStore.restore(mFacebook, this);
+		
+		Bundle extras = getIntent().getExtras();
+		first = extras.getString("First");
+		last = extras.getString("Last");
 		
 		spincheck
 				.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -148,10 +154,9 @@ public class AddFriends extends Activity implements OnClickListener {
 			tv1.setText(helper.quickanddirtyGetRecordGivenID(i, LOCATION_TABLE));
 			
 			
-			String first = etname.getText().toString().split(" ")[0];
-			String last = etname.getText().toString().split(" ")[1];
-			long j = helper.addContact(first, last, i);
 			
+			long j = helper.addContact(first, last, i);
+			tv1.append("name:");
 			tv1.append(helper.quickanddirtyGetRecordGivenID(j, NAME_TABLE));
 			break;
 		}

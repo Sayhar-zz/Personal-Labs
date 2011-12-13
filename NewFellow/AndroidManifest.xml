@@ -24,7 +24,8 @@
             </intent-filter>
         </activity>
         <activity android:label="AddFriends" android:name="AddFriends"></activity>
-        <activity android:label="nearFriends" android:name=".nearFriends" />
+        <activity android:label="nearFriends" android:name="nearFriends" />
+        <activity android:label="AddName" android:name="AddName" />
     </application>
 
 </manifest>

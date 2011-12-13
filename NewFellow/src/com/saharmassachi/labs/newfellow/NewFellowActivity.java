@@ -129,7 +129,7 @@ public class NewFellowActivity extends Activity {
     
     
     public void goAddNew(View v){
-    	Intent i = new Intent(this, AddFriends.class);
+    	Intent i = new Intent(this, AddName.class);
 		startActivity(i);
     }
     
