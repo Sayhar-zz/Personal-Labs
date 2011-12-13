@@ -28,6 +28,7 @@ import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.Facebook;
 import com.facebook.android.FacebookError;
 
+
 import com.saharmassachi.labs.newfellow.book.FriendsGetProfilePics;
 import com.saharmassachi.labs.newfellow.book.SessionStore;
 import com.saharmassachi.labs.newfellow.book.Utility;
@@ -69,14 +70,51 @@ public class AddName extends Activity implements OnItemClickListener {
 		nextPage = new Intent(this, AddFriends.class);
 		h = new Handler();
 		
-		graph_or_fql = "graph";
+		graph_or_fql = "fql";
 		
+		
+
+	}
+
+	public void search(View v){
+	//When the search button is pressed, do a facebook friend search (on whatever is in the edittext) and then call the listadapter on THAT 
 		try {
 			callGraph();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
 
+	private void callGraph() {
+		//graph:
+		/*Bundle params = new Bundle();
+		params.putString("fields", "name, picture, location");
+		
+		dialog = ProgressDialog.show(this, "", "please wait", true, true);
+
+		dialog.show();
+		mAsyncRunner.request("me/friends", params, frl);
+		*/
+		
+		//fql:
+		/*
+		String query = "select name, current_location, uid, pic_square from user where uid in (select uid2 from friend where uid1=me()) order by name";
+		String query2 = "select name, current_location, uid, pic_square from user where uid in (select name, current_location, uid, pic_square from user where uid in (select uid2 from friend where uid1=me()) order by name) AND first_name='matt'";
+		
+        String mquery = "'query1':'SELECT uid, rsvp_status FROM event_member WHERE eid=12345678'; 'query2': 'SELECT name, url, pic FROM profile WHERE id IN (SELECT uid FROM #query1)'";
+        */
+        String query3 = String.format(" select name, current_location, uid, pic_square from user where " +
+        		"uid in (select uid2 from friend where uid1=me()) " +
+        		"AND uid in (SELECT uid FROM user WHERE contains('%s'))", etname.getText().toString());
+        Bundle params = new Bundle();
+        params.putString("method", "fql.query");
+        params.putString("query", query3);
+        
+		FriendsRequestListener frl = new FriendsRequestListener();
+		mAsyncRunner.request(null, params, frl);
+        dialog = ProgressDialog.show(this, "", "please wait", true, true);
+		dialog.show();
 	}
 
 	private void dispGraph() {
@@ -96,19 +134,8 @@ public class AddName extends Activity implements OnItemClickListener {
 		friendsList.setAdapter(new FriendListAdapter(this));
 
 	}
-
-	private void callGraph() {
-
-		Bundle params = new Bundle();
-		params.putString("fields", "name, picture, location");
-		FriendsRequestListener frl = new FriendsRequestListener();
-		dialog = ProgressDialog.show(this, "", "please wait", true, true);
-
-		dialog.show();
-		mAsyncRunner.request("me/friends", params, frl);
-		
-	}
-
+	
+	
 	public void saveName(View v) {
 		String text = etname.getText().toString();
 		if (text.length() > 0) {
@@ -155,7 +182,6 @@ public class AddName extends Activity implements OnItemClickListener {
 			try {
 				jsonObject = jsonArray.getJSONObject(position);
 			} catch (JSONException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			View hView = convertView;

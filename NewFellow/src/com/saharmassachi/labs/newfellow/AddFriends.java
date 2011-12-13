@@ -156,8 +156,6 @@ public class AddFriends extends Activity implements OnClickListener {
 			Toast.makeText(this, "record " + i + " saved", Toast.LENGTH_LONG).show();
 			tv1.setText(helper.quickanddirtyGetRecordGivenID(i, LOCATION_TABLE));
 			
-			
-			
 			long j = helper.addContact(first, last, i);
 			tv1.append("name:");
 			tv1.append(helper.quickanddirtyGetRecordGivenID(j, NAME_TABLE));

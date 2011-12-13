@@ -9,4 +9,5 @@
  	<string name="gotoAddFriend">Now where?</string>
  	<string name="no">No</string>
  	<string name="yes">Yes</string>
+ 	<string name="search">Search</string>
 </resources>
