@@ -225,19 +225,24 @@ public class DBhelper {
 		if (streetnum > 0) {
 			values.put(NUMBER, streetnum);
 		}
-		values.put(STREETNAME, street);
+		if(street != null){
+			values.put(STREETNAME, street);
+		}
 		values.put(CITY, city);
 
-		if (rawzip.contains("-")) {
-			String[] zips = rawzip.split("-");
-			String zip = zips[0];
-			String zipsuffix = zips[1];
-			values.put(ZIP, zip);
-			values.put(ZIPSUFFIX, zipsuffix);
-		} else {
-			if (rawzip != null)
+		if(rawzip != null){
+			if (rawzip.contains("-")){
+				String[] zips = rawzip.split("-");
+				String zip = zips[0];
+				String zipsuffix = zips[1];
+				values.put(ZIP, zip);
+				values.put(ZIPSUFFIX, zipsuffix);
+			}
+			else{
 				values.put(ZIP, rawzip);
+			}
 		}
+		
 
 		return values;
 	}

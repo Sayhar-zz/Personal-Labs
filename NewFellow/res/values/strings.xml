@@ -7,4 +7,6 @@
  	<string name="goSeeNearest">See who is nearby</string>
  	<string name="request">Request!</string>
  	<string name="gotoAddFriend">Now where?</string>
+ 	<string name="no">No</string>
+ 	<string name="yes">Yes</string>
 </resources>

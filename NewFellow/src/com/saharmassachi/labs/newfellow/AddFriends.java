@@ -81,8 +81,11 @@ public class AddFriends extends Activity implements OnClickListener {
 		SessionStore.restore(mFacebook, this);
 		
 		Bundle extras = getIntent().getExtras();
-		first = extras.getString("First");
-		last = extras.getString("Last");
+		String[] names = extras.getString("name").split(" ");
+		
+		first = names[0];
+		last = names[names.length -1];
+		
 		
 		spincheck
 				.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

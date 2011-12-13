@@ -40,7 +40,8 @@ public class NewFellowActivity extends Activity {
 	private LoginButton mLoginButton;
 
 	private Button mRequestButton;
-	
+	String[] permissions = { "offline_access", "publish_stream", "user_photos", "publish_checkins",
+    "photo_upload" };
 	private Facebook mFacebook;
 	private AsyncFacebookRunner mAsyncRunner;
 	
@@ -64,7 +65,7 @@ public class NewFellowActivity extends Activity {
        	SessionStore.restore(mFacebook, this);
         SessionEvents.addAuthListener(new SampleAuthListener());
         SessionEvents.addLogoutListener(new SampleLogoutListener());
-        mLoginButton.init(this, mFacebook);
+        mLoginButton.init(this, mFacebook, permissions);
        	
         
     }

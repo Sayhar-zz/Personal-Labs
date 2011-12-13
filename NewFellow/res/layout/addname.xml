@@ -27,21 +27,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <ScrollView
-            android:id="@+id/scroller"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="false"
-            android:orientation="vertical"
-            android:layout_alignParentTop="true" 
-            android:paddingBottom="50dp" >
-
-            <TextView
-                android:id="@+id/filler"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                />
-        </ScrollView>
+       <ListView
+        android:id="@+id/friends_list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
 
         <Button
             android:id="@+id/saveName"
