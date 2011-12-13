@@ -9,13 +9,19 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <TextView 
+		    android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/nametext"
+		    />
+    
     <RelativeLayout
         android:id="@+id/relativeLayout1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="0.73" >
 
-	
+		
 	
         <TextView
             android:id="@+id/textView3"

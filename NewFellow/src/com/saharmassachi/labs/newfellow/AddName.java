@@ -103,13 +103,29 @@ public class AddName extends Activity implements OnItemClickListener {
 		String query2 = "select name, current_location, uid, pic_square from user where uid in (select name, current_location, uid, pic_square from user where uid in (select uid2 from friend where uid1=me()) order by name) AND first_name='matt'";
 		
         String mquery = "'query1':'SELECT uid, rsvp_status FROM event_member WHERE eid=12345678'; 'query2': 'SELECT name, url, pic FROM profile WHERE id IN (SELECT uid FROM #query1)'";
-        */
+        
         String query3 = String.format(" select name, current_location, uid, pic_square from user where " +
         		"uid in (select uid2 from friend where uid1=me()) " +
         		"AND uid in (SELECT uid FROM user WHERE contains('%s'))", etname.getText().toString());
+        
+        String query4 = String.format(" select name, current_location, uid, pic_square from user where " +
+        		"contains('%s') AND " +
+        		"uid in (select uid , name from user where uid in (select uid2 from friend where uid1=me())) ", etname.getText().toString());
+        
+        String query5 = String.format("select name, current_location, uid, pic_square from user where contains('%s') AND " +
+        		"uid in (select uid2 from friend where uid1=me())", etname.getText().toString());
+        
+        String query6 = String.format("select name, current_location, uid, pic_square from user where " +
+        		"uid in (select uid2 from friend where uid1=me()) AND " +
+        		"'%s' IN (select name from user where uid in (select uid2 from friend where uid1=me()))", etname.getText().toString());*/
+        
+        String query7 = String.format("select name, current_location, uid, pic_square from user WHERE " +
+        		"uid in (select uid2 from friend where uid1=me()) " + 
+        		" AND (strpos(lower(name), lower('%s')) >= 0)", etname.getText().toString());
+        
         Bundle params = new Bundle();
         params.putString("method", "fql.query");
-        params.putString("query", query3);
+        params.putString("query", query7);
         
 		FriendsRequestListener frl = new FriendsRequestListener();
 		mAsyncRunner.request(null, params, frl);
