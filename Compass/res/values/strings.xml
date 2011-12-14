@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Your GPS coordinate is</string>
+    <string name="app_name">Compass</string>
+    <string name ="anchor">This is where my car is at!</string>
+    <string name="go">OK I left the mall. Find me my car!</string>
+</resources>
