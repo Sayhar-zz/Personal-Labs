@@ -150,7 +150,7 @@ public class CompassActivity extends Activity implements OnClickListener {
 		else if(compassOn){
 			double lat = location.getLatitude();
 			double lon = location.getLongitude();
-			gps2.setText(lat + " , " + lon);
+			//gps2.setText(lat + " , " + lon);
 			roamer = location;
 			paintCompass();
 		}
@@ -174,9 +174,9 @@ public class CompassActivity extends Activity implements OnClickListener {
 			point -= 360;
 		
 		} 
-		degrees.setText("Heading (Degrees you point away from north):" + String.valueOf(heading) + 
-				"\n Bearing (Degrees car is away from north): " + String.valueOf(bearing) +
-				"\n Compass should point: " + String.valueOf(point));
+		//degrees.setText("Heading (Degrees you point away from north):" + String.valueOf(heading) + 
+		//		"\n Bearing (Degrees car is away from north): " + String.valueOf(bearing) +
+		//		"\n Compass should point: " + String.valueOf(point));
 		postCompass(point);
 	}
 	
