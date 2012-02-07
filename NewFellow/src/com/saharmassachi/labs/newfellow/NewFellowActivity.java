@@ -135,7 +135,7 @@ public class NewFellowActivity extends Activity {
     }
     
     public void goSeeNearest(View v){
-    	Intent i = new Intent(this, nearFriends.class);
+    	Intent i = new Intent(this, FriendsMap.class);
 		startActivity(i);
     }
     

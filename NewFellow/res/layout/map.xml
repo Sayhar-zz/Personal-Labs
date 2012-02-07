@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/frame"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <view
+        android:id="@+id/themap"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:apiKey="0_9Pks7VkRuhX3CGkkeQsPHyWtt26wWT8sI_Sig"
+        class="com.google.android.maps.MapView"
+        android:clickable="true"
+        android:enabled="true" />
+
+</FrameLayout>
