@@ -8,6 +8,8 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
+import android.widget.EditText;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -30,6 +32,7 @@ public class FriendsMap extends MapActivity {
 	int streetView;
 	boolean goToMyLocation;
 	DBhelper datahelper;
+	EditText etSearch;
 	//ZoomPanListener zpl;
 	//protected Handler handler = new Handler();
 	
@@ -42,6 +45,8 @@ public class FriendsMap extends MapActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map);
 
+		etSearch = (EditText) findViewById(R.id.searchMap);
+		
 		//instantiates HappyData and creates an arraylist of all the bottles
 		//HappyData datahelper = new HappyData(this);
 		//ArrayList<HappyBottle> plottables = datahelper.getMyHistory();
@@ -135,7 +140,8 @@ public class FriendsMap extends MapActivity {
 			int longitude = contact.getLong();
 			GeoPoint point = new GeoPoint(latitude,longitude);
 			String S = (contact.getName());
-			overlay.addToOverlay(new OverlayItem(point, S, locationString));
+			long cid = contact.getCid();
+			overlay.addToOverlay(new ContactOverlayItem(point, S, locationString, cid));
 		}
 	}
 	
@@ -182,7 +188,20 @@ public class FriendsMap extends MapActivity {
 	
 	*/
 	
-
+	public void mapSearch(View v){
+		mapClear();
+		String searchString = etSearch.getText().toString();
+		ArrayList<SimpleContact> plottables;
+		if (searchString.length() == 0){
+			plottables = datahelper.getAllSimpleContacts();
+		}
+		else{
+			plottables = datahelper.search(searchString);
+		}
+		overlayAdder(plottables, itemizedoverlay);
+		
+		
+	}
 	
 	protected void mapClear(){
 		//stub - to be filled in later

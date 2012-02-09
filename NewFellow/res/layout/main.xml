@@ -9,45 +9,49 @@
         android:layout_height="wrap_content"
         android:text="@string/hello" />
 
-   	<com.saharmassachi.labs.newfellow.book.LoginButton
+    <com.saharmassachi.labs.newfellow.book.LoginButton
         android:id="@+id/login"
-        android:src="@drawable/login_button"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" 
+        android:layout_height="wrap_content"
         android:layout_margin="30dp"
-        />
-    
-    <Button 
+        android:src="@drawable/login_button" />
+
+    <Button
         android:id="@+id/goAddNew"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:onClick="goAddNew"
-        android:text="@string/goAddNew"
-        />
-    
-    <Button 
+        android:text="@string/goAddNew" />
+
+    <Button
         android:id="@+id/goSeeNearest"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:onClick="goSeeNearest"
-        android:text="@string/goSeeNearest"
-        />
-    
+        android:text="@string/goSeeNearest" />
+
     <TextView
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
         android:id="@+id/maintext"
-        />
-    
-    	<Button android:id="@+id/requestButton"
-        android:text="@string/request"
-        
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" 
-        android:paddingRight="20dp" 
-        android:paddingLeft="20dp"
-        android:layout_margin="20dp" 
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/requestButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
         android:onClick="requestButton"
-        />
-    
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:text="@string/request" />
+    <Button
+        android:id="@+id/downloadButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:onClick="downloadAllAttendees"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:text="sync attendees" />
+
 </LinearLayout>

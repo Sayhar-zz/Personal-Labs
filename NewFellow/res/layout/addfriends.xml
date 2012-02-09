@@ -16,19 +16,42 @@
             android:orientation="vertical" >
 
             <TextView
-                android:id="@+id/askemail"
+                android:id="@+id/askphone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
+                android:text="@string/askphone"
+                android:layout_alignBaseline="@+id/getphone"
+                android:textSize="20sp" />
+            
+            <EditText
+                android:id="@+id/getphone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:textSize="20sp"
+                android:inputType="phone"
+                android:layout_toRightOf="@+id/askphone" />
+            
+            <TextView
+                android:id="@+id/askemail"
+                android:layout_below="@+id/askphone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignBaseline="@+id/getemail"
                 android:text="@string/askemail"
-                android:textSize="30sp" />
+                android:textSize="20sp" />
 
             <EditText
                 android:id="@+id/getemail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_toRightOf="@+id/askemail" />
+				android:inputType="textEmailAddress"
+                android:layout_below="@+id/getphone"
+                android:layout_toRightOf="@+id/askemail" 
+                android:textSize="20sp"/>
 
             <TextView
                 android:id="@+id/asktwitter"
@@ -36,16 +59,20 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/askemail"
+                android:layout_alignBaseline="@+id/gettwitter"
                 android:text="@string/asktwitter"
-                android:textSize="30sp" />
+                android:textSize="20sp" />
 
             <EditText
                 android:id="@+id/gettwitter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_below="@+id/askemail"
-                android:layout_toRightOf="@+id/asktwitter" />
+                android:inputType="textShortMessage|textNoSuggestions"
+                android:layout_toRightOf="@+id/asktwitter"
+                android:layout_below="@+id/getemail"
+                android:textSize="20sp"
+                 />
         </RelativeLayout>
 
         <TextView

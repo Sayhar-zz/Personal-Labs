@@ -44,6 +44,7 @@ public class NewFellowActivity extends Activity {
     "photo_upload" };
 	private Facebook mFacebook;
 	private AsyncFacebookRunner mAsyncRunner;
+	private NetHelper nethelper;
 	
 	/** Called when the activity is first created. */
     @Override
@@ -51,6 +52,7 @@ public class NewFellowActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
+        nethelper = new NetHelper();
         if (APP_ID == null) {
             Util.showAlert(this, "Warning", "Facebook Applicaton ID must be " +
                     "specified before running this example: see Example.java");
@@ -127,7 +129,9 @@ public class NewFellowActivity extends Activity {
     }
     
     
-    
+    public void downloadAllAttendees(View v){
+    	nethelper.downAllAttendees();
+    }
     
     public void goAddNew(View v){
     	Intent i = new Intent(this, AddName.class);

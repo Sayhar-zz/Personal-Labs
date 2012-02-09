@@ -10,6 +10,7 @@
  	<string name="no">No</string>
  	<string name="yes">Yes</string>
  	<string name="search">Search</string>
+ 	<string name="askphone">Phone?</string>
  	<string name="askemail">Email?</string>
  	<string name="asktwitter">Twitter?</string>
  	<string name="dbadd">Add to Database</string>

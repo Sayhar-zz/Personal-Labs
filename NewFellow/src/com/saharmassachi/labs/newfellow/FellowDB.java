@@ -19,8 +19,9 @@ import static com.saharmassachi.labs.newfellow.Constants.ZIPSUFFIX;
 import static com.saharmassachi.labs.newfellow.Constants.RAWLOC;
 
 import static com.saharmassachi.labs.newfellow.Constants.NAME_TABLE;
-import static com.saharmassachi.labs.newfellow.Constants.NID;
+import static com.saharmassachi.labs.newfellow.Constants.CID;
 import static com.saharmassachi.labs.newfellow.Constants.NAME;
+import static com.saharmassachi.labs.newfellow.Constants.PHONE;
 import static com.saharmassachi.labs.newfellow.Constants.EMAIL;
 import static com.saharmassachi.labs.newfellow.Constants.TWITTER;
 import static com.saharmassachi.labs.newfellow.Constants.FBID;
@@ -31,7 +32,7 @@ import static com.saharmassachi.labs.newfellow.Constants.PRIMARYLOC;
 
 public class FellowDB extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "fellow.db";
-	private static final int DATABASE_VERSION = 7; 
+	private static final int DATABASE_VERSION = 8; 
 	private static final String TAG = "FellowDB"; 
 	
 	private String CREATE_TABLE_1 = "CREATE TABLE " +  LOCATION_TABLE +" (" +
@@ -48,8 +49,9 @@ public class FellowDB extends SQLiteOpenHelper {
 			;
 	
 	private String CREATE_TABLE_2 ="CREATE TABLE " + NAME_TABLE + " ( " +
-			NID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+			CID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 			NAME + " TEXT, " +
+			PHONE + " TEXT, " +
 			EMAIL + " TEXT, " +
 			TWITTER + " TEXT, " +
 			FBID + " TEXT, " +

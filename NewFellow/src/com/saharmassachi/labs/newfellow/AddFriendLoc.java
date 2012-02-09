@@ -63,6 +63,7 @@ public class AddFriendLoc extends Activity implements OnClickListener {
 	
 	private String name;
 	
+	private EditText etPhone;
 	private TextView tvEmail;
 	private TextView tvTweet;
 	
@@ -76,6 +77,7 @@ public class AddFriendLoc extends Activity implements OnClickListener {
 		
 		tvEmail = (TextView) findViewById(R.id.getemail);
 		tvTweet = (TextView) findViewById(R.id.gettwitter);
+		etPhone = (EditText) findViewById(R.id.getphone);
 		
 		spincheck = (Spinner) findViewById(R.id.spincheck);
 		addToDB = (Button) findViewById(R.id.friendDbAdd);
@@ -160,15 +162,15 @@ public class AddFriendLoc extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.friendDbAdd:
-			
-			String mail = tvEmail.getText().toString();
-			String tweet = tvTweet.getText().toString();
+			String phone = etPhone.getText().toString().trim();
+			String mail = tvEmail.getText().toString().trim();
+			String tweet = tvTweet.getText().toString().trim();
 			Address a = allAddresses.get(whichAddress);
 			long i = helper.addAddress(a);
 			Toast.makeText(this, "record " + i + " saved", Toast.LENGTH_LONG).show();
 			tv1.setText(helper.quickanddirtyGetRecordGivenID(i, LOCATION_TABLE));
 			
-			long j = helper.addContact(name, mail, tweet, i);
+			long j = helper.addContact(name, phone, mail, tweet, i);
 			tv1.append("name:");
 			tv1.append(helper.quickanddirtyGetRecordGivenID(j, NAME_TABLE));
 			break;

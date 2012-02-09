@@ -20,8 +20,9 @@ public interface Constants extends BaseColumns {
 	public static final String RAWLOC = "rawlocation";
 	
 	public static final String NAME_TABLE = "contact";
-	public static final String NID = "nid";
+	public static final String CID = "nid";
 	public static final String NAME = "name";
+	public static final String PHONE = "phone";
 	public static final String EMAIL = "email";
 	public static final String TWITTER = "twitter";
 	public static final String FBID = "fbid";

@@ -7,15 +7,15 @@ public class SimpleContact {
 	private String name;
 	private String rawloc;
 	private long cid;
-	private long nid;
+	private long lid;
 	
-	public SimpleContact(int la, int ln, String name, String rawloc, long cid, long nid){
+	public SimpleContact(int la, int ln, String name, String rawloc, long cid, long lid){
 		this.name = name;
 		this.rawloc = rawloc;
 		this.cid = cid;
 		this.lat = la;
 		this.lng = ln;
-		this.nid = nid;
+		this.lid = lid;
 	}
 	
 	public int getLat(){
@@ -31,19 +31,19 @@ public class SimpleContact {
 	}
 	
 	public String getAddress(){
-		return toString();
-	}
-	
-	public String toString(){
 		return rawloc;
 	}
 	
-	public long returnCid(){
+	public String toString(){
+		return name + "\n" + rawloc;
+	}
+	
+	public long getCid(){
 		return cid;
 	}
 	
-	public long returnNid(){
-		return nid;
+	public long getLid(){
+		return lid;
 	}
 }
 
