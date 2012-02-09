@@ -1,5 +1,6 @@
-
 package com.saharmassachi.labs.newfellow;
+
+//This is step 2 in the add step - location
 
 import android.app.Activity;
 import java.io.IOException;
@@ -18,6 +19,7 @@ import com.saharmassachi.labs.newfellow.book.BaseRequestListener;
 import com.saharmassachi.labs.newfellow.book.SessionStore;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -35,7 +37,8 @@ import static com.saharmassachi.labs.newfellow.Constants.LOCATION_TABLE;
 import static com.saharmassachi.labs.newfellow.Constants.NAME_TABLE;
 
 
-public class AddFriends extends Activity implements OnClickListener {
+
+public class AddFriendLoc extends Activity implements OnClickListener {
 	public static final String APP_ID = "234125573324281";
 	 
 	 
@@ -58,8 +61,10 @@ public class AddFriends extends Activity implements OnClickListener {
 	private Facebook mFacebook;
 	private AsyncFacebookRunner mAsyncRunner;
 	
-	private String first;
-	private String last;
+	private String name;
+	
+	private TextView tvEmail;
+	private TextView tvTweet;
 	
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -68,6 +73,10 @@ public class AddFriends extends Activity implements OnClickListener {
 
 		setContentView(R.layout.addfriends);
 
+		
+		tvEmail = (TextView) findViewById(R.id.getemail);
+		tvTweet = (TextView) findViewById(R.id.gettwitter);
+		
 		spincheck = (Spinner) findViewById(R.id.spincheck);
 		addToDB = (Button) findViewById(R.id.friendDbAdd);
 		etaddress = (EditText) findViewById(R.id.friendaddress);
@@ -82,13 +91,10 @@ public class AddFriends extends Activity implements OnClickListener {
 		SessionStore.restore(mFacebook, this);
 		
 		Bundle extras = getIntent().getExtras();
-		String[] names = extras.getString("name").split(" ");
 		
-		first = names[0];
-		last = names[names.length -1];
-		
-		tvname.setText(first + " " + last);
-		
+		name = extras.getString("name");
+		tvname.setText(name);
+	
 		
 		spincheck
 				.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -154,12 +160,15 @@ public class AddFriends extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.friendDbAdd:
+			
+			String mail = tvEmail.getText().toString();
+			String tweet = tvTweet.getText().toString();
 			Address a = allAddresses.get(whichAddress);
 			long i = helper.addAddress(a);
 			Toast.makeText(this, "record " + i + " saved", Toast.LENGTH_LONG).show();
 			tv1.setText(helper.quickanddirtyGetRecordGivenID(i, LOCATION_TABLE));
 			
-			long j = helper.addContact(first, last, i);
+			long j = helper.addContact(name, mail, tweet, i);
 			tv1.append("name:");
 			tv1.append(helper.quickanddirtyGetRecordGivenID(j, NAME_TABLE));
 			break;
@@ -184,7 +193,7 @@ public class AddFriends extends Activity implements OnClickListener {
                 // if we do not do this, an runtime exception will be generated
                 // e.g. "CalledFromWrongThreadException: Only the original
                 // thread that created a view hierarchy can touch its views."
-               AddFriends.this.runOnUiThread(new Runnable() {
+               AddFriendLoc.this.runOnUiThread(new Runnable() {
                     public void run() {
                         tv1.setText("Hello there, " + name + "!");
                     }

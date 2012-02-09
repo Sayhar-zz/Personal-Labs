@@ -16,7 +16,7 @@ import com.facebook.android.R;
 
 import com.facebook.android.Util;
 
-import com.saharmassachi.labs.newfellow.AddFriends;
+import com.saharmassachi.labs.newfellow.AddFriendLoc;
 import com.saharmassachi.labs.newfellow.book.BaseRequestListener;
 import com.saharmassachi.labs.newfellow.book.LoginButton;
 import com.saharmassachi.labs.newfellow.book.SessionEvents;

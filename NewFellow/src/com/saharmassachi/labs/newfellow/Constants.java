@@ -17,11 +17,14 @@ public interface Constants extends BaseColumns {
 	public static final String STREETNAME = "streetname";
 	public static final String NUMBER = "number";
 	public static final String CITY = "city";
+	public static final String RAWLOC = "rawlocation";
 	
-	public static final String NAME_TABLE = "name";
+	public static final String NAME_TABLE = "contact";
 	public static final String NID = "nid";
-	public static final String FIRST = "first";
-	public static final String LAST = "last";
+	public static final String NAME = "name";
+	public static final String EMAIL = "email";
+	public static final String TWITTER = "twitter";
+	public static final String FBID = "fbid";
 	public static final String PRIMARYLOC = "primaryloc";
 	
 }

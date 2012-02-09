@@ -1,5 +1,7 @@
 package com.saharmassachi.labs.newfellow;
 
+//This is stage one in the add step - name
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,9 +58,9 @@ public class AddName extends Activity implements OnItemClickListener {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		helper = new DBhelper(this);
-
 		setContentView(R.layout.addname);
+		
+		helper = new DBhelper(this);
 		mFacebook = new Facebook(APP_ID);
 		mAsyncRunner = new AsyncFacebookRunner(mFacebook);
 		SessionStore.restore(mFacebook, this);
@@ -67,7 +69,10 @@ public class AddName extends Activity implements OnItemClickListener {
 		etname = (EditText) findViewById(R.id.friendname);
 		filler = (TextView) findViewById(R.id.filler);
 
-		nextPage = new Intent(this, AddFriends.class);
+		nextPage = new Intent(this, AddFriendLoc.class);
+		
+		
+		
 		h = new Handler();
 		
 		graph_or_fql = "fql";
@@ -119,19 +124,19 @@ public class AddName extends Activity implements OnItemClickListener {
         		"uid in (select uid2 from friend where uid1=me()) AND " +
         		"'%s' IN (select name from user where uid in (select uid2 from friend where uid1=me()))", etname.getText().toString());*/
         
-        String query7 = String.format("select name, current_location, uid, pic_square from user WHERE " +
-        		"uid in (select uid2 from friend where uid1=me()) " + 
-        		" AND (strpos(lower(name), lower('%s')) >= 0)", etname.getText().toString());
-        
-        Bundle params = new Bundle();
-        params.putString("method", "fql.query");
-        params.putString("query", query7);
-        
-		FriendsRequestListener frl = new FriendsRequestListener();
-		mAsyncRunner.request(null, params, frl);
-        dialog = ProgressDialog.show(this, "", "please wait", true, true);
-		dialog.show();
-	}
+		 String query7 = String.format("select name, current_location, uid, pic_square from user WHERE " +
+	        		"uid in (select uid2 from friend where uid1=me()) " + 
+	        		" AND (strpos(lower(name), lower('%s')) >= 0)", etname.getText().toString());
+	        
+	        Bundle params = new Bundle();
+	        params.putString("method", "fql.query");
+	        params.putString("query", query7);
+	        
+			FriendsRequestListener frl = new FriendsRequestListener();
+			mAsyncRunner.request(null, params, frl);
+	        dialog = ProgressDialog.show(this, "", "please wait", true, true);
+			dialog.show();
+		}
 
 	private void dispGraph() {
 		try {

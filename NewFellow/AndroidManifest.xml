@@ -24,7 +24,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:label="AddFriends" android:name="AddFriends"></activity>
+        <activity android:label="AddFriendLoc" android:name="AddFriendLoc"></activity>
         <activity android:label="nearFriends" android:name="nearFriends" />
         <activity android:label="AddName" android:name="AddName" />
         <activity android:label="FriendsMap" android:name="FriendsMap" android:theme="@android:style/Theme.NoTitleBar"/>

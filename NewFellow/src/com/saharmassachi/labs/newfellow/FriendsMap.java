@@ -1,5 +1,10 @@
 package com.saharmassachi.labs.newfellow;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,6 +14,8 @@ import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
+import com.google.android.maps.Overlay;
+import com.google.android.maps.OverlayItem;
 
 public class FriendsMap extends MapActivity {
 
@@ -16,11 +23,15 @@ public class FriendsMap extends MapActivity {
 	int zoomLevel;
 	GeoPoint center;
 	MyLocationOverlay userLocationOverlay;
+	List<Overlay> mapOverlays;
+	ItemizedContactOverlay itemizedoverlay;
+	Drawable drawable;
 	protected MapController controller;
 	int streetView;
 	boolean goToMyLocation;
-	ZoomPanListener zpl;
-	protected Handler handler = new Handler();
+	DBhelper datahelper;
+	//ZoomPanListener zpl;
+	//protected Handler handler = new Handler();
 	
 	
 	/**
@@ -31,30 +42,45 @@ public class FriendsMap extends MapActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map);
 
-		readIntents();
-		
-
 		//instantiates HappyData and creates an arraylist of all the bottles
 		//HappyData datahelper = new HappyData(this);
 		//ArrayList<HappyBottle> plottables = datahelper.getMyHistory();
-
-	
 		//initialize and display map view and user location
 		initMapView();
+		initOverlays();
 		initMyLocation();
 		goToMyLocation();
-	
-
+		streetView = 0;
 		center = new GeoPoint(-1,-1);
 		zoomLevel = map.getZoomLevel();
+		datahelper = new DBhelper(this);
+		
+		ArrayList<SimpleContact> plottables = datahelper.getAllSimpleContacts();  
+//			new ArrayList<SimpleContact>();   //datahelper.getMyHistory();
+		//plottables.add(new SimpleContact(11,13,"brandon", "Southwood plantation road", 1,1));
+		overlayAdder(plottables, itemizedoverlay);
+		
+		mapOverlays.add(itemizedoverlay);
+		
+		
+		
+		//temporary:
+		/*GeoPoint point = new GeoPoint(19240000,-99120000);
+		OverlayItem overlayitem = new OverlayItem(point, "Hola, Mundo!", "I'm in Mexico City!");
+		itemizedoverlay.addToOverlay(overlayitem);
+		mapOverlays.add(itemizedoverlay);*/
 	}
 	
 	@Override
 	protected boolean isRouteDisplayed() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
+	private void initOverlays(){
+		mapOverlays = map.getOverlays();
+		drawable = this.getResources().getDrawable(R.drawable.androidmarker);
+		itemizedoverlay = new ItemizedContactOverlay(drawable, this);
+	}
 	
 	//Starts tracking the users position on the map. 
 	protected void initMyLocation() {
@@ -63,17 +89,11 @@ public class FriendsMap extends MapActivity {
 		map.getOverlays().add(userLocationOverlay);  //adds the users location overlay to the overlays being displayed
 	}
 	
-	
-	
-	protected void readIntents(){
-		goToMyLocation = true;
-	
-	}
-	
 	//Finds and initializes the map view.
 	protected void initMapView() {
 		map = (MapView) findViewById(R.id.themap);
-		controller = map.getController();	
+		controller = map.getController();
+		map.setBuiltInZoomControls(false); //hides the default map zoom buttons so they don't interfere with the app buttons
 		//checks streetView
 		if (streetView == 1) {
 			map.setStreetView(true);
@@ -84,24 +104,45 @@ public class FriendsMap extends MapActivity {
 		}
 		map.invalidate();	
 
-	
-		map.setBuiltInZoomControls(false); //hides the default map zoom buttons so they don't interfere with the app buttons
-
+		/*//adds the sad and happy overlays to the map
+		if (checkSad == 1)
+			map.getOverlays().add(sadOverlay);
+		if (checkHappy == 1) 
+			map.getOverlays().add(happyOverlay);
+		*/
 	}
 	
 	
 	protected boolean isMoved() {
+		//Did the user move the map? 
 		GeoPoint trueCenter =map.getMapCenter();
 		int trueZoom = map.getZoomLevel();
 		if(!((trueCenter.equals(center)) && (trueZoom == zoomLevel))){	
-			//Log.d(TAG, "You moved!:" + center.toString() + " zoom: " + zoomLevel);
 			return true;
 		}else{
 			return false;
 		}}
-
 	
-
+	
+	
+	protected synchronized void overlayAdder(ArrayList<SimpleContact> toshow, ItemizedContactOverlay overlay){ 
+		if (toshow == null) {return; }///THIS IS A PROBLEM AND SHOULD NEVER HAPPEN
+		
+		for(SimpleContact contact : toshow) {
+			
+			String locationString = contact.getAddress(); 
+			int latitude = contact.getLat();
+			int longitude = contact.getLong();
+			GeoPoint point = new GeoPoint(latitude,longitude);
+			String S = (contact.getName());
+			overlay.addToOverlay(new OverlayItem(point, S, locationString));
+		}
+	}
+	
+	
+	
+	
+	
 	protected void goToMyLocation() {
 		if (goToMyLocation == true) {
 			userLocationOverlay.runOnFirstFix(new Runnable() {
@@ -115,6 +156,7 @@ public class FriendsMap extends MapActivity {
 		map.getOverlays().add(userLocationOverlay); //adds the users location overlay to the overlays being displayed
 	}
 
+	/*
 	//Our version of a listener - checks to see if the user moved.
 	private class ZoomPanListener extends AsyncTask<Void, Void, Void>{
 		@Override
@@ -138,14 +180,14 @@ public class FriendsMap extends MapActivity {
 					e.printStackTrace();
 				}}}}
 	
+	*/
 	
-	private void drawRecentLocal(){
-		if (!(isMoved() )){return;}
-		//stub - to be filled in later 
-	}
+
 	
 	protected void mapClear(){
 		//stub - to be filled in later
+		
+		itemizedoverlay.emptyOverlay();
 		/*happyOverlay.emptyOverlay();
 		sadOverlay.emptyOverlay();
 		filter.clear();*/
@@ -157,8 +199,8 @@ public class FriendsMap extends MapActivity {
 	protected void onPause() {
 		super.onPause();
 		userLocationOverlay.disableMyLocation();  
-		synchronized (zpl){
-			zpl.cancel(true);}
+//		synchronized (zpl){
+//			zpl.cancel(true);}
 		super.onPause();
 	}
 
@@ -168,8 +210,8 @@ public class FriendsMap extends MapActivity {
 		super.onResume();
 		
 		userLocationOverlay.enableMyLocation();
-		zpl = new ZoomPanListener();
-		zpl.execute(null);
+//		zpl = new ZoomPanListener();
+//		zpl.execute(null);
 	}
 
 
