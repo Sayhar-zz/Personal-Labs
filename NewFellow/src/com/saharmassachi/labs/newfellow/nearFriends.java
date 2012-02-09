@@ -42,7 +42,7 @@ public class nearFriends extends Activity implements LocationListener {
 		whereIam = mgr.getLastKnownLocation(best);
 		
 		
-		findClosest();
+		//findClosest();
 	}
 	
 	
@@ -87,7 +87,7 @@ public class nearFriends extends Activity implements LocationListener {
 	
 	
 	
-	private void findClosest(){
+	/*private void findClosest(){
 		//given a point, find the closest entry in your db to it.		
 		
 		
@@ -128,5 +128,5 @@ public class nearFriends extends Activity implements LocationListener {
 		
 	}
 	
-	
+	*/
 }

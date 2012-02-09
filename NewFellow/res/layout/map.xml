@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/frame"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <view
+        android:id="@+id/themap"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:apiKey="0_9Pks7VkRuhX3CGkkeQsPHyWtt26wWT8sI_Sig"
+        class="com.google.android.maps.MapView"
+        android:clickable="true"
+        android:enabled="true" />
+    
+    
+    <TableLayout 
+		android:layout_gravity="top"  
+		android:stretchColumns="*" 
+		android:layout_height="50dp" 
+		android:layout_width="wrap_content" 
+		android:background="@drawable/toolbartop"
+		android:paddingLeft="10dp"
+		android:paddingRight="10dp"
+		android:paddingBottom="10dp" > 
+		<TableRow>
+			<EditText android:id="@+id/searchMap"
+            	android:layout_width="fill_parent"
+            	android:layout_height="wrap_content"
+            	android:layout_weight="3.0"
+            	android:textSize="12sp" 
+            	android:singleLine="true"
+            	
+            	/>
+			<Button
+				android:id="@+id/doSearchMap" 
+				android:text="@string/search"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_weight="1.0"  
+				android:textSize="10sp"
+				android:onClick="mapSearch"
+				/>
+			 
+		</TableRow>
+	</TableLayout>
+
+        
+        	<TableLayout 
+	    android:paddingTop="10dp"
+	    android:paddingRight="10dp"
+	    android:paddingLeft="10dp"
+		android:layout_gravity="bottom" 
+		android:layout_height="65dp" 
+		android:layout_width="wrap_content" 
+		android:background="@drawable/toolbarbottom" 
+		> 
+		<TableRow> 
+		  	<Button
+				android:id="@+id/gocontactview"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:background="@drawable/mapswitch"
+				android:layout_marginRight="10dp"
+				android:layout_marginLeft="5dp" /> 
+                 
+         
+
+        	<Button android:id="@+id/gohappytrack"
+           		    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/happytoggle"
+                    android:layout_marginRight="10dp" />
+		</TableRow>  
+	</TableLayout>
+	
+</FrameLayout>

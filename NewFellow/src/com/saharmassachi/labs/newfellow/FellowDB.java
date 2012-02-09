@@ -16,38 +16,48 @@ import static com.saharmassachi.labs.newfellow.Constants.STATE;
 import static com.saharmassachi.labs.newfellow.Constants.STREETNAME;
 import static com.saharmassachi.labs.newfellow.Constants.ZIP;
 import static com.saharmassachi.labs.newfellow.Constants.ZIPSUFFIX;
+import static com.saharmassachi.labs.newfellow.Constants.RAWLOC;
+
 import static com.saharmassachi.labs.newfellow.Constants.NAME_TABLE;
-import static com.saharmassachi.labs.newfellow.Constants.NID;
-import static com.saharmassachi.labs.newfellow.Constants.FIRST;
-import static com.saharmassachi.labs.newfellow.Constants.LAST;
+import static com.saharmassachi.labs.newfellow.Constants.CID;
+import static com.saharmassachi.labs.newfellow.Constants.NAME;
+import static com.saharmassachi.labs.newfellow.Constants.PHONE;
+import static com.saharmassachi.labs.newfellow.Constants.EMAIL;
+import static com.saharmassachi.labs.newfellow.Constants.TWITTER;
+import static com.saharmassachi.labs.newfellow.Constants.FBID;
+
 import static com.saharmassachi.labs.newfellow.Constants.PRIMARYLOC;
 
 
 
 public class FellowDB extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "fellow.db";
-	private static final int DATABASE_VERSION = 4; 
+	private static final int DATABASE_VERSION = 8; 
 	private static final String TAG = "FellowDB"; 
 	
 	private String CREATE_TABLE_1 = "CREATE TABLE " +  LOCATION_TABLE +" (" +
 			LID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-			LAT + " REAL, " +
-			LONG + " REAL, " +
+			LAT + " INTEGER, " +
+			LONG + " INTEGER, " +
 			STATE + " TEXT, " +
 			ZIP + " TEXT, " +
 			ZIPSUFFIX + " TEXT, " +
 			STREETNAME + " TEXT, " +
 			NUMBER + " INTEGER, " +
-			CITY + " TEXT);"
+			CITY + " TEXT, "+
+			RAWLOC + " TEXT);"
 			;
 	
 	private String CREATE_TABLE_2 ="CREATE TABLE " + NAME_TABLE + " ( " +
-			NID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-			FIRST + " TEXT, " +
-			LAST + " TEXT, " +
+			CID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+			NAME + " TEXT, " +
+			PHONE + " TEXT, " +
+			EMAIL + " TEXT, " +
+			TWITTER + " TEXT, " +
+			FBID + " TEXT, " +
 			PRIMARYLOC + " INTEGER, " +
 			"FOREIGN KEY(" + PRIMARYLOC + ") REFERENCES " + LOCATION_TABLE + "(" + LID + "));";
-			 
+		 
 		
 		
 	public FellowDB(Context ctx){

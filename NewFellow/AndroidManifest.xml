@@ -11,6 +11,8 @@
        android:name="android.permission.ACCESS_FINE_LOCATION" />
       <uses-permission
         android:name="android.permission.INTERNET" />
+      <uses-permission android:name="android.permission.CALL_PHONE"/>
+      
     <application
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
@@ -23,9 +25,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:label="AddFriends" android:name="AddFriends"></activity>
+        <activity android:label="AddFriendLoc" android:name="AddFriendLoc"></activity>
         <activity android:label="nearFriends" android:name="nearFriends" />
         <activity android:label="AddName" android:name="AddName" />
+        <activity android:label="FriendsMap" android:name="FriendsMap" android:theme="@android:style/Theme.NoTitleBar"/>
+        
+      
+        <uses-library android:name="com.google.android.maps" />
     </application>
 
 </manifest>

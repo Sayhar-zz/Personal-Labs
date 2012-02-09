@@ -16,7 +16,7 @@ import com.facebook.android.R;
 
 import com.facebook.android.Util;
 
-import com.saharmassachi.labs.newfellow.AddFriends;
+import com.saharmassachi.labs.newfellow.AddFriendLoc;
 import com.saharmassachi.labs.newfellow.book.BaseRequestListener;
 import com.saharmassachi.labs.newfellow.book.LoginButton;
 import com.saharmassachi.labs.newfellow.book.SessionEvents;
@@ -44,6 +44,7 @@ public class NewFellowActivity extends Activity {
     "photo_upload" };
 	private Facebook mFacebook;
 	private AsyncFacebookRunner mAsyncRunner;
+	private NetHelper nethelper;
 	
 	/** Called when the activity is first created. */
     @Override
@@ -51,6 +52,7 @@ public class NewFellowActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
+        nethelper = new NetHelper();
         if (APP_ID == null) {
             Util.showAlert(this, "Warning", "Facebook Applicaton ID must be " +
                     "specified before running this example: see Example.java");
@@ -127,7 +129,9 @@ public class NewFellowActivity extends Activity {
     }
     
     
-    
+    public void downloadAllAttendees(View v){
+    	nethelper.downAllAttendees();
+    }
     
     public void goAddNew(View v){
     	Intent i = new Intent(this, AddName.class);
@@ -135,7 +139,7 @@ public class NewFellowActivity extends Activity {
     }
     
     public void goSeeNearest(View v){
-    	Intent i = new Intent(this, nearFriends.class);
+    	Intent i = new Intent(this, FriendsMap.class);
 		startActivity(i);
     }
     

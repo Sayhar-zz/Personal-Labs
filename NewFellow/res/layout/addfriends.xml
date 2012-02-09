@@ -3,82 +3,139 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
-<LinearLayout 
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
 
-    <TextView 
-		    android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/nametext"
-		    />
-    
-    <RelativeLayout
-        android:id="@+id/relativeLayout1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.73" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
 
-		
-	
+        <RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/askphone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:text="@string/askphone"
+                android:layout_alignBaseline="@+id/getphone"
+                android:textSize="20sp" />
+            
+            <EditText
+                android:id="@+id/getphone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:textSize="20sp"
+                android:inputType="phone"
+                android:layout_toRightOf="@+id/askphone" />
+            
+            <TextView
+                android:id="@+id/askemail"
+                android:layout_below="@+id/askphone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignBaseline="@+id/getemail"
+                android:text="@string/askemail"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/getemail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+				android:inputType="textEmailAddress"
+                android:layout_below="@+id/getphone"
+                android:layout_toRightOf="@+id/askemail" 
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/asktwitter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/askemail"
+                android:layout_alignBaseline="@+id/gettwitter"
+                android:text="@string/asktwitter"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/gettwitter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:inputType="textShortMessage|textNoSuggestions"
+                android:layout_toRightOf="@+id/asktwitter"
+                android:layout_below="@+id/getemail"
+                android:textSize="20sp"
+                 />
+        </RelativeLayout>
+
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/nametext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/friendname"
-            android:text="What is their address?"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:layout_weight="0.73" >
 
-        <EditText
-            android:id="@+id/friendaddress"
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/friendname"
+                android:text="What is their address?"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <EditText
+                android:id="@+id/friendaddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/textView3"
+                android:inputType="textPostalAddress" >
+
+                <requestFocus />
+            </EditText>
+
+            <Button
+                android:id="@+id/button1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/friendaddress"
+                android:onClick="getAddressInfo"
+                android:text="Push" />
+
+            <Button
+                android:id="@+id/friendDbAdd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/spincheck"
+                android:text="Add to DB"
+                android:visibility="invisible" />
+
+            <Spinner
+                android:id="@+id/spincheck"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/button1" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/textView3"
-            android:inputType="textPostalAddress"
-            >
+            android:text="Sup?" />
+    </LinearLayout>
 
-            <requestFocus />
-        </EditText>
-
-        <Button
-            android:id="@+id/button1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/friendaddress"
-            android:onClick="getAddressInfo"
-            android:text="Push" />
-
-        
-
-        <Button
-            android:id="@+id/friendDbAdd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/spincheck"
-            android:visibility="invisible"
-            android:text="Add to DB" />
-
-        <Spinner
-            android:id="@+id/spincheck"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/button1" />
-
-    </RelativeLayout>
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sup?" />
-    
-    
-
-</LinearLayout>
 </ScrollView>
