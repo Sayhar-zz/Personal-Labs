@@ -19,43 +19,67 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+//NetHelper is STATIC
+//NetHelper should usually be called through DBhelper
+
 public class NetHelper {
 
 	public static final String appKey = "VM5ROYOT7FUHFXZ65D";
 
-	public void downAllAttendees() {
-//todo- something with all the attendee data
-		//also remember to change count to 5000 or something
+	public static ArrayList<String[]> downAllAttendees() {
+
+		// also remember to change count to 5000 or something
 		//
+		ArrayList<String[]> a = null;
 		try {
 			String page = "";
 			HttpGet request = new HttpGet();
 			String rootscampid = "2025659803";
 			String baseURL = "http://www.eventbrite.com/json/event_list_attendees?app_key="
-					+ appKey + "&id=" + rootscampid + "&count=2";
+					+ appKey + "&id=" + rootscampid + "&count=20";
 
 			request.setURI(new URI(baseURL));
 			page = connectionHelper(request);
-			ArrayList<String> a = parse(page);
+			a = parse(page);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		
+		return a;
 
 	}
 
-	private ArrayList<String> parse(String in) {
-		// TODO
-		ArrayList<String> a = new ArrayList<String>();
+	private static ArrayList<String[]> parse(String in) {
+		ArrayList<String[]> a = new ArrayList<String[]>();
 		try {
 			JSONObject wrapper = new JSONObject(in);
 			JSONArray jarray = wrapper.getJSONArray("attendees");
 			for (int i = 0; i < jarray.length(); i++) {
 				// so each o is an attendee
 				JSONObject o = jarray.getJSONObject(i);
+				
 				o = o.getJSONObject("attendee");
-				a.add(o.getString("first_name") + " " + o.getString("last_name"));
+				String name;
+				name = "'" + o.getString("first_name") + " " + o.getString("last_name") + "'";
+				String city;
+				String work;
+				try{
+					city = "'"+ o.getString("home_city") + "'";
+					if(city.trim().equals("")) city = null;
+				}
+				catch(Exception e){
+					city = null;
+				}
+				try{
+					work = "'" + o.getString("company") + "'";
+					if(work.trim().equals("")) work = null;
+				}
+				catch(Exception e){
+					work = null;
+				}
+				String[] s = {name, city, work };
+				a.add(s);
 			}
 
 		} catch (Exception e) {
@@ -64,10 +88,10 @@ public class NetHelper {
 		return a;
 	}
 
-	private String connectionHelper(HttpRequestBase request) {
+	private static String connectionHelper(HttpRequestBase request) {
 		String page = "error"; // NOTICE: if you ever change this, change the
-								// code in upload() that checks for "error" to
-								// see if this worked or not.
+		// code in upload() that checks for "error" to
+		// see if this worked or not.
 		BufferedReader in = null;
 		HttpClient client = new DefaultHttpClient();
 		try {

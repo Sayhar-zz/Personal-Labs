@@ -33,26 +33,25 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class NewFellowActivity extends Activity {
-	 public static final String APP_ID = "234125573324281";
-	
-	 private TextView mText;
-	 
+	public static final String APP_ID = "234125573324281";
+
+	private TextView mText;
+
 	private LoginButton mLoginButton;
 
 	private Button mRequestButton;
-	String[] permissions = { "offline_access", "publish_stream", "user_photos", "publish_checkins",
-    "photo_upload" };
+	String[] permissions = { "offline_access", "publish_stream", "user_photos",
+			"publish_checkins", "photo_upload" };
 	private Facebook mFacebook;
-	private AsyncFacebookRunner mAsyncRunner;
-	private NetHelper nethelper;
-	
+	private AsyncFacebookRunner mAsyncRunner;	
+	private DBhelper dbhelper;
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
-        nethelper = new NetHelper();
+        
         if (APP_ID == null) {
             Util.showAlert(this, "Warning", "Facebook Applicaton ID must be " +
                     "specified before running this example: see Example.java");
@@ -68,7 +67,7 @@ public class NewFellowActivity extends Activity {
         SessionEvents.addAuthListener(new SampleAuthListener());
         SessionEvents.addLogoutListener(new SampleLogoutListener());
         mLoginButton.init(this, mFacebook, permissions);
-       	
+       	dbhelper = new DBhelper(this);
         
     }
     
@@ -130,12 +129,13 @@ public class NewFellowActivity extends Activity {
     
     
     public void downloadAllAttendees(View v){
-    	nethelper.downAllAttendees();
+    	dbhelper.downAllAttendees();
     }
     
     public void goAddNew(View v){
-    	Intent i = new Intent(this, AddName.class);
-		startActivity(i);
+    	//Intent i = new Intent(this, AddName.class);
+		Intent i = new Intent(this, FilterAttendees.class);
+    	startActivity(i);
     }
     
     public void goSeeNearest(View v){

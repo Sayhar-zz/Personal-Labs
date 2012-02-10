@@ -28,6 +28,7 @@
         <activity android:label="AddFriendLoc" android:name="AddFriendLoc"></activity>
         <activity android:label="nearFriends" android:name="nearFriends" />
         <activity android:label="AddName" android:name="AddName" />
+        <activity android:label="FilterAttendees" android:name="FilterAttendees" />
         <activity android:label="FriendsMap" android:name="FriendsMap" android:theme="@android:style/Theme.NoTitleBar"/>
         
       

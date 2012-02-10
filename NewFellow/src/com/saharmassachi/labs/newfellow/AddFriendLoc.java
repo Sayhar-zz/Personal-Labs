@@ -64,8 +64,8 @@ public class AddFriendLoc extends Activity implements OnClickListener {
 	private String name;
 	
 	private EditText etPhone;
-	private TextView tvEmail;
-	private TextView tvTweet;
+	private TextView etEmail;
+	private TextView etTweet;
 	
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -75,8 +75,8 @@ public class AddFriendLoc extends Activity implements OnClickListener {
 		setContentView(R.layout.addfriends);
 
 		
-		tvEmail = (TextView) findViewById(R.id.getemail);
-		tvTweet = (TextView) findViewById(R.id.gettwitter);
+		etEmail = (TextView) findViewById(R.id.getemail);
+		etTweet = (TextView) findViewById(R.id.gettwitter);
 		etPhone = (EditText) findViewById(R.id.getphone);
 		
 		spincheck = (Spinner) findViewById(R.id.spincheck);
@@ -96,7 +96,8 @@ public class AddFriendLoc extends Activity implements OnClickListener {
 		
 		name = extras.getString("name");
 		tvname.setText(name);
-	
+		
+		trySetAddress();
 		
 		spincheck
 				.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -120,11 +121,25 @@ public class AddFriendLoc extends Activity implements OnClickListener {
 						addToDB.setVisibility(View.INVISIBLE);
 					}
 				}
-
 				);
 
 	}
 
+	public void trySetAddress() {
+		// name = name.substring(1, name.length()-1);
+		try {
+			String[] atnd = helper.getOneAttendee(name);
+			String city = atnd[2];
+			if (city != null) {
+				etaddress.setText(city);
+				//This happens every time. WHY? 
+				//Oh well, O-R model will fi.
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void getAddressInfo(View v) {
 		Toast t = Toast.makeText(this,
 				"Address not recognized, please try again", Toast.LENGTH_LONG);
@@ -163,8 +178,8 @@ public class AddFriendLoc extends Activity implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.friendDbAdd:
 			String phone = etPhone.getText().toString().trim();
-			String mail = tvEmail.getText().toString().trim();
-			String tweet = tvTweet.getText().toString().trim();
+			String mail = etEmail.getText().toString().trim();
+			String tweet = etTweet.getText().toString().trim();
 			Address a = allAddresses.get(whichAddress);
 			long i = helper.addAddress(a);
 			Toast.makeText(this, "record " + i + " saved", Toast.LENGTH_LONG).show();

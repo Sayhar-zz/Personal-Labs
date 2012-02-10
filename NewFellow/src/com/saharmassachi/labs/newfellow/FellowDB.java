@@ -25,15 +25,17 @@ import static com.saharmassachi.labs.newfellow.Constants.PHONE;
 import static com.saharmassachi.labs.newfellow.Constants.EMAIL;
 import static com.saharmassachi.labs.newfellow.Constants.TWITTER;
 import static com.saharmassachi.labs.newfellow.Constants.FBID;
-
 import static com.saharmassachi.labs.newfellow.Constants.PRIMARYLOC;
 
-
+import static com.saharmassachi.labs.newfellow.Constants.AID;
+import static com.saharmassachi.labs.newfellow.Constants.WORK;
+import static com.saharmassachi.labs.newfellow.Constants.PRELOAD_TABLE;
 
 public class FellowDB extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "fellow.db";
 	private static final int DATABASE_VERSION = 8; 
-	private static final String TAG = "FellowDB"; 
+	private static final String TAG = "FellowDB";
+
 	
 	private String CREATE_TABLE_1 = "CREATE TABLE " +  LOCATION_TABLE +" (" +
 			LID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -58,7 +60,11 @@ public class FellowDB extends SQLiteOpenHelper {
 			PRIMARYLOC + " INTEGER, " +
 			"FOREIGN KEY(" + PRIMARYLOC + ") REFERENCES " + LOCATION_TABLE + "(" + LID + "));";
 		 
-		
+	private String CREATE_TABLE_3 = "CREATE TABLE " + PRELOAD_TABLE + " ( " +
+			AID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+			NAME + " TEXT, " +
+			CITY + " TEXT, " +
+			WORK + " TEXT);";
 		
 	public FellowDB(Context ctx){
 		super(ctx, DATABASE_NAME, null, DATABASE_VERSION);
@@ -68,6 +74,7 @@ public class FellowDB extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(CREATE_TABLE_1);
 		db.execSQL(CREATE_TABLE_2);
+		db.execSQL(CREATE_TABLE_3);
 		
 	}
 
@@ -76,6 +83,7 @@ public class FellowDB extends SQLiteOpenHelper {
 		Log.v(TAG, "upgrading");
 		db.execSQL("DROP TABLE IF EXISTS " + NAME_TABLE);
 		db.execSQL("DROP TABLE IF EXISTS " + LOCATION_TABLE);
+		db.execSQL("DROP TABLE IF EXISTS " + PRELOAD_TABLE);
 	    onCreate(db);
 		
 	}
