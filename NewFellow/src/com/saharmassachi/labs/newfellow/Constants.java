@@ -28,5 +28,10 @@ public interface Constants extends BaseColumns {
 	public static final String FBID = "fbid";
 	public static final String PRIMARYLOC = "primaryloc";
 	
+	public static final String PRELOAD_TABLE = "attendees";
+	public static final String WORK = "work";
+	public static final String AID = "aid";
+	
+	
 }
 

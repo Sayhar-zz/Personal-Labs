@@ -1,6 +1,6 @@
 package com.saharmassachi.labs.newfellow;
 
-//This is stage one in the add step - name
+//DEPRECATED FACEBOOK-CENTRIC
 
 import org.json.JSONArray;
 import org.json.JSONException;

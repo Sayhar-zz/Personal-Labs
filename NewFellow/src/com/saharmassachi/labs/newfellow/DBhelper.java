@@ -32,6 +32,10 @@ import static com.saharmassachi.labs.newfellow.Constants.TWITTER;
 import static com.saharmassachi.labs.newfellow.Constants.FBID;
 import static com.saharmassachi.labs.newfellow.Constants.PRIMARYLOC;
 
+import static com.saharmassachi.labs.newfellow.Constants.AID;
+import static com.saharmassachi.labs.newfellow.Constants.WORK;
+import static com.saharmassachi.labs.newfellow.Constants.PRELOAD_TABLE;
+
 public class DBhelper {
 	private FellowDB fdb;
 
@@ -39,24 +43,24 @@ public class DBhelper {
 		fdb = new FellowDB(ctx);
 	}
 
-	protected String[] getContactInfo(long cid){
+	protected String[] getContactInfo(long cid) {
 		String[] toreturn = new String[5];
 		SQLiteDatabase db = fdb.getReadableDatabase();
-		try{
+		try {
 			String[] columns = { NAME, PHONE, EMAIL, TWITTER, FBID };
-			Cursor c = db.query(NAME_TABLE, columns, CID + " = " + cid,
-				null, null, null, null);
-			if(c.getCount() != 0){
+			Cursor c = db.query(NAME_TABLE, columns, CID + " = " + cid, null,
+					null, null, null);
+			if (c.getCount() != 0) {
 				c.moveToFirst();
-				for(int i = 0; i < 5; i++){
+				for (int i = 0; i < 5; i++) {
 					String s = c.getString(i);
-					if((s != null) 
-							&& (s.trim() != null)) {
-						toreturn[i] = s;}
+					if ((s != null) && (s.trim() != null)) {
+						toreturn[i] = s;
+					}
 				}
 			}
 			c.close();
-		}catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			toreturn = null;
 		} finally {
@@ -64,29 +68,29 @@ public class DBhelper {
 		}
 		return toreturn;
 	}
-	
-	protected String getEmail(long cid){
+
+	protected String getEmail(long cid) {
 		String toreturn = null;
 		SQLiteDatabase db = fdb.getReadableDatabase();
-		try{
+		try {
 			String[] columns = { EMAIL };
-			Cursor c = db.query(NAME_TABLE, columns, CID + " = " + cid,
-				null, null, null, null);
-			if(c.getCount() != 0){
+			Cursor c = db.query(NAME_TABLE, columns, CID + " = " + cid, null,
+					null, null, null);
+			if (c.getCount() != 0) {
 				c.moveToFirst();
 				toreturn = c.getString(0);
 			}
 			c.close();
-		}catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			toreturn = null;
 		} finally {
 			db.close();
 		}
 		return toreturn;
-		
+
 	}
-	
+
 	protected long addAddress(Address a) {
 		long toreturn;
 
@@ -111,7 +115,7 @@ public class DBhelper {
 
 		ContentValues values = new ContentValues();
 		values.put(NAME, name);
-		
+
 		values.put(PRIMARYLOC, locationID);
 		try {
 			toreturn = db.insertOrThrow(NAME_TABLE, null, values);
@@ -124,7 +128,8 @@ public class DBhelper {
 		return toreturn;
 	}
 
-	protected long addContact(String name, String phone, String email, String tweet, long locationID){
+	protected long addContact(String name, String phone, String email,
+			String tweet, long locationID) {
 		SQLiteDatabase db = fdb.getWritableDatabase();
 		long toreturn = -1;
 
@@ -143,8 +148,9 @@ public class DBhelper {
 			db.close();
 		}
 		return toreturn;
-		
+
 	}
+
 	protected String quickanddirtyGetRecordGivenID(long id, String table) {
 		SQLiteDatabase db = fdb.getReadableDatabase();
 		String ID = CID;
@@ -153,14 +159,14 @@ public class DBhelper {
 		} else if (table == LOCATION_TABLE) {
 			ID = LID;
 		}
-		
+
 		String s = "error";
-		
-		try{
+
+		try {
 			Cursor c = db.query(table, null, ID + " = " + id, null, null, null,
-				null);
+					null);
 			c.moveToFirst();
-			
+
 			int l = c.getColumnCount();
 			s = "";
 			for (int i = 0; i < l; i++) {
@@ -168,37 +174,30 @@ public class DBhelper {
 				s += "|\t ";
 			}
 			c.close();
-		}
-		catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		finally{
-		
+		} finally {
+
 			db.close();
 		}
 		return s;
 	}
 
-	protected ArrayList<SimpleContact> search(String searchstring){
+	protected ArrayList<SimpleContact> search(String searchstring) {
 		SQLiteDatabase db = fdb.getReadableDatabase();
 		ArrayList<SimpleContact> a = new ArrayList<SimpleContact>();
-		String sql = "SELECT DISTINCT " + 
-				LOCATION_TABLE + "." +  LAT + 
-		" , " + LOCATION_TABLE + "." +  LONG +
-		" , " + NAME_TABLE     + "." +  NAME +
-		" , " + LOCATION_TABLE + "." +  RAWLOC +
-		" , " + NAME_TABLE     + "." +  CID + 
-		" , " + LOCATION_TABLE + "." +  LID +
-		" FROM " + NAME_TABLE  + " " +
-		" JOIN " + LOCATION_TABLE + 
-		" ON " + NAME_TABLE + "." + PRIMARYLOC +
-		" = " + LOCATION_TABLE + "." + LID + 
-		" WHERE ( " + NAME + " LIKE " + "'%" + searchstring + "%' ) " +
-		"OR ( " + RAWLOC + " LIKE " + "'%" + searchstring + "%' ) ;"
-		;
+		String sql = "SELECT DISTINCT " + LOCATION_TABLE + "." + LAT + " , "
+				+ LOCATION_TABLE + "." + LONG + " , " + NAME_TABLE + "." + NAME
+				+ " , " + LOCATION_TABLE + "." + RAWLOC + " , " + NAME_TABLE
+				+ "." + CID + " , " + LOCATION_TABLE + "." + LID + " FROM "
+				+ NAME_TABLE + " " + " JOIN " + LOCATION_TABLE + " ON "
+				+ NAME_TABLE + "." + PRIMARYLOC + " = " + LOCATION_TABLE + "."
+				+ LID + " WHERE ( " + NAME + " LIKE " + "'%" + searchstring
+				+ "%' ) " + "OR ( " + RAWLOC + " LIKE " + "'%" + searchstring
+				+ "%' ) ;";
 
 		Cursor cursor = db.rawQuery(sql, null);
-		while (cursor.moveToNext() ){
+		while (cursor.moveToNext()) {
 			SimpleContact sc = createSimpleContact(cursor);
 			a.add(sc);
 		}
@@ -206,27 +205,22 @@ public class DBhelper {
 		db.close();
 		return a;
 	}
-	
-	protected ArrayList<SimpleContact> getAllSimpleContacts(){
-		
+
+	protected ArrayList<SimpleContact> getAllSimpleContacts() {
+
 		SQLiteDatabase db = fdb.getReadableDatabase();
 		ArrayList<SimpleContact> a = new ArrayList<SimpleContact>();
-		String sql = "SELECT DISTINCT " + 
-					LOCATION_TABLE + "." +  LAT + 
-			" , " + LOCATION_TABLE + "." +  LONG +
-			" , " + NAME_TABLE     + "." +  NAME +
-			" , " + LOCATION_TABLE + "." +  RAWLOC +
-			" , " + NAME_TABLE     + "." +  CID + 
-			" , " + LOCATION_TABLE + "." +  LID +
-			" FROM " + NAME_TABLE  + " " +
-			" JOIN " + LOCATION_TABLE + 
-			" ON " + NAME_TABLE + "." + PRIMARYLOC +
-			" = " + LOCATION_TABLE + "." + LID + ";" 
-			;
-		
-		//TODO: 
+		String sql = "SELECT DISTINCT " + LOCATION_TABLE + "." + LAT + " , "
+				+ LOCATION_TABLE + "." + LONG + " , " + NAME_TABLE + "." + NAME
+				+ " , " + LOCATION_TABLE + "." + RAWLOC + " , " + NAME_TABLE
+				+ "." + CID + " , " + LOCATION_TABLE + "." + LID + " FROM "
+				+ NAME_TABLE + " " + " JOIN " + LOCATION_TABLE + " ON "
+				+ NAME_TABLE + "." + PRIMARYLOC + " = " + LOCATION_TABLE + "."
+				+ LID + ";";
+
+		// TODO:
 		Cursor cursor = db.rawQuery(sql, null);
-		while (cursor.moveToNext() ){
+		while (cursor.moveToNext()) {
 			SimpleContact sc = createSimpleContact(cursor);
 			a.add(sc);
 		}
@@ -234,93 +228,103 @@ public class DBhelper {
 		db.close();
 		return a;
 	}
-	
-/*
 
-	protected String[] findClosestAddress(double lat, double lng, String state) {
-		// given a lat and long, find the closest address to that
-		//returns a tuple.
-		// toreturn[0] corresponds to the string representation of "where"
-		// toreturn[1] corresponds to the string representation of "who"
-		String[] toreturn = new String[2];
-		
+	
+	protected String[] getAllAttendees(){
+		String[]  toReturn;
 		SQLiteDatabase db = fdb.getReadableDatabase();
-		Cursor c;
-		if(state.equals("none")){
-			c = db.query(LOCATION_TABLE, null, null,
-					null, null, null, null);
-		}
-		else{
-			c = db.query(LOCATION_TABLE, null, STATE + " = '" + state + "'",
-				null, null, null, null);
-		}
-		int l = c.getCount();
-		if (l < 1) {
-			c.close();
-			c = db.query(LOCATION_TABLE, null, null, null, null, null, null);
-			l = c.getCount();
-			if (l < 1) {
-				toreturn[0] = "empty database";
-				toreturn[1] = "nothing to see here";
-				return toreturn;
-			}
-		}
-		float[] distances = new float[l];
+		String[] columns = {AID, NAME};
+		Cursor c = db.query(PRELOAD_TABLE, columns, null, null, null, null, null);
+		toReturn = new String[c.getCount()];
 		int i = 0;
-		// distances will store the distances between this point and each given
-		// point in the cursor
-		// i marks the index of the cursor position that corresponds to the cell
-		// in distances
-		float[] results;
-		while (c.moveToNext()) {
-			results = new float[3];
-			double lat2 = c.getDouble(1);
-			double lng2 = c.getDouble(2);
-			Location.distanceBetween(lat, lng, lat2, lng2, results);
-			distances[i] = results[0];
+		while(c.moveToNext()){
+			toReturn[i] = c.getString(1);
 			i++;
 		}
-
-		i = 0;
-		float smallestdist = distances[0];
-		int smallestdistpos = 0;
-		for (i = 0; i < distances.length; i++) {
-			float f = distances[i];
-			if (f < smallestdist) {
-				smallestdist = f;
-				smallestdistpos = i;
-			}
-		}
-
-		c.moveToPosition(smallestdistpos);
-		long pos = c.getLong(0);
-
 		c.close();
 		db.close();
-
-		
-		toreturn[0] = quickanddirtyGetRecordGivenID(pos, LOCATION_TABLE);
-		toreturn[1] = quickanddirtyGetRecordGivenID(findOwnerOfLocation(pos), NAME_TABLE);
-		return toreturn;
+		return toReturn;
 	}
-
-	protected String[] findClosestAddress(double lat, double lng) {
 	
-		return findClosestAddress(lat, lng, "none");
+	protected String[] getOneAttendee(String name){
+		String[]  toReturn = new String[4];
+		SQLiteDatabase db = fdb.getReadableDatabase();
+		Cursor c = db.query(PRELOAD_TABLE, null, NAME + "=" + name, null, null, null, null);
+		c.moveToFirst();
+		int j = c.getCount();
+		for (int i = 0 ; i < 4; i++){
+			toReturn[i] = c.getString(i);
+		}
+		c.close();
+		db.close();
+		return toReturn;
 	}
-	*/
-	private SimpleContact createSimpleContact(Cursor c){
+	
+	protected void downAllAttendees() {
+		ArrayList<String[]> a = NetHelper.downAllAttendees();
+
+		SQLiteDatabase db;
+		ContentValues values = new ContentValues();
+		for (String[] s : a) {
+
+			values = new ContentValues();
+			values.put(NAME, s[0]);
+
+			if ((s[1] != null) && (s[1].trim() != "")) {
+				values.put(CITY, s[1]);}
+
+			if ((s[2] != null) && (s[2].trim() != "")) {
+				values.put(WORK, s[2]);}
+			
+			if (!existsPreload(values)) { //avoiding dupes
+				db = fdb.getWritableDatabase(); //write to the table
+				try {
+					db.insertOrThrow(PRELOAD_TABLE, null, values);
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+					db.close();
+				}
+			}
+
+		}
+
+	}
+
+	private boolean existsPreload(ContentValues values) {
+		SQLiteDatabase db = fdb.getReadableDatabase();
+		String[] columns = { AID };
+		String WHERE = NAME + " = " + values.getAsString(NAME);
+		if(values.containsKey(CITY)){
+			WHERE += " AND " + CITY + " = " + values.getAsString(CITY); 
+		}
+		if(values.containsKey(WORK)){
+			WHERE += " AND " + WORK + " = " + values.getAsString(WORK);
+		}
+		Cursor c = db.query(PRELOAD_TABLE, columns, WHERE, null, null, null, null);
+		if (c.getCount() > 0) {
+			c.close();
+			db.close();
+			return true;
+		}
+		c.close();
+		db.close();
+		return false;
+
+	}
+
+	private SimpleContact createSimpleContact(Cursor c) {
 		int lat = c.getInt(0);
 		int lng = c.getInt(1);
 		String name = c.getString(2);
 		String rawloc = c.getString(3);
 		long nid = c.getLong(4);
 		long lid = c.getLong(5);
-		
+
 		SimpleContact sc = new SimpleContact(lat, lng, name, rawloc, nid, lid);
 		return sc;
 	}
-	
+
 	private long findOwnerOfLocation(long pos) {
 		// given the row of a location in the location table, find the user in
 		// the name table that corresponds to it.
@@ -342,12 +346,11 @@ public class DBhelper {
 		}
 		return toreturn;
 	}
-	
 
 	private ContentValues addressToContentValues(Address a) {
 
-		int lat = (int)  (a.getLatitude() *1E6);
-		int lng = (int) (a.getLongitude() *1E6);
+		int lat = (int) (a.getLatitude() * 1E6);
+		int lng = (int) (a.getLongitude() * 1E6);
 		String state = a.getAdminArea();
 		String street = a.getThoroughfare();
 		String rawzip = a.getPostalCode();
@@ -371,35 +374,34 @@ public class DBhelper {
 		if (streetnum > 0) {
 			values.put(NUMBER, streetnum);
 		}
-		if(street != null){
+		if (street != null) {
 			values.put(STREETNAME, street);
 		}
 		values.put(CITY, city);
 
-		if(rawzip != null){
-		//if there is a zipcode:
-			//if it's a longer zipcode, split it into zip and suffix
-			if (rawzip.contains("-")){
+		if (rawzip != null) {
+			// if there is a zipcode:
+			// if it's a longer zipcode, split it into zip and suffix
+			if (rawzip.contains("-")) {
 				String[] zips = rawzip.split("-");
 				String zip = zips[0];
 				String zipsuffix = zips[1];
 				values.put(ZIP, zip);
 				values.put(ZIPSUFFIX, zipsuffix);
 			}
-			//otherwise just store the zip code
-			else{
+			// otherwise just store the zip code
+			else {
 				values.put(ZIP, rawzip);
 			}
 		}
-		
+
 		int j = a.getMaxAddressLineIndex();
 		String toString = "";
-		for (int i = 0; i <= j; i++){
-			toString += a.getAddressLine(i); 
+		for (int i = 0; i <= j; i++) {
+			toString += a.getAddressLine(i);
 			toString += "\n";
 		}
 		values.put(RAWLOC, toString);
-		
 
 		return values;
 	}
