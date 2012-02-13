@@ -7,6 +7,7 @@ public class Contact {
 	String twitter;
 	String fbid;
 	String phone;
+	String email;
 	//Location l;
 	
 	public Contact(){}
@@ -37,6 +38,9 @@ public class Contact {
 		last = l;
 	}
 	
+	public void setEmail(String e){
+		email = e;
+	}
 	public void setID(long i){
 		officialID = i;
 	}
@@ -48,5 +52,22 @@ public class Contact {
 	public long getID(){
 		return officialID;
 	}
+	
+	public String getPhone(){
+		return phone;
+	}
+	
+	public String getEmail(){
+		return email;
+	}
+	
+	public String getfirst(){
+		return first;
+	}
+	
+	public String getlast(){
+		return last;
+	}
+	
 	
 }

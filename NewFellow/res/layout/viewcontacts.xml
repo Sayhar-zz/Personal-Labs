@@ -4,12 +4,7 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <!-- Pretty hint text, and maxLines -->
 
-    <RelativeLayout
-        android:id="@+id/relativeLayout1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
 
         <EditText
             android:id="@+id/search_line"
@@ -25,15 +20,7 @@
             <requestFocus />
         </EditText>
 
-        <Button
-            android:id="@+id/manualAdd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:text="@string/manualAdd" 
-            android:onClick="manualAdd"/>   
-             </RelativeLayout>
+        
 
     <!-- Set height to 0, and let the weight param expand it -->
     <!--

@@ -9,7 +9,7 @@ public class SimpleContact {
 	private long cid;
 	private long lid;
 	
-	public SimpleContact(int la, int ln, String name, String rawloc, long cid, long lid){
+	public SimpleContact(int la, int ln, String fname, String lname, String rawloc, long cid, long lid){
 		this.name = name;
 		this.rawloc = rawloc;
 		this.cid = cid;

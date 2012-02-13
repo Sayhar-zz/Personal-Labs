@@ -2,11 +2,6 @@ package com.saharmassachi.labs.newfellow;
 
 import java.util.ArrayList;
 
-import org.json.JSONException;
-
-import com.saharmassachi.labs.newfellow.book.FriendsGetProfilePics;
-import com.saharmassachi.labs.newfellow.book.Utility;
-
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
@@ -16,19 +11,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-import static com.saharmassachi.labs.newfellow.Constants.NAME;
 import static com.saharmassachi.labs.newfellow.Constants.CID;
+import static com.saharmassachi.labs.newfellow.Constants.FNAME;
+import static com.saharmassachi.labs.newfellow.Constants.LNAME;
 
 public class FilterAttendees extends ListActivity {
 	DBhelper helper;
@@ -38,7 +30,7 @@ public class FilterAttendees extends ListActivity {
 	Context ctx;
 	private Intent nextPage;
 	long[] ids;
-	
+	Contact[] contacts;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -67,27 +59,14 @@ public class FilterAttendees extends ListActivity {
 		lv.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				final String name = (String) ((TextView) view).getText();
-				pos = parent.getPositionForView(view);
-				
-				new AlertDialog.Builder(ctx)
-				.setTitle("Is this it?")
-				.setMessage(
-						String.format(
-								"Is %1$s the person you are thinking of?",
-								name))
-								.setPositiveButton(R.string.yes,
-										new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog,
-											int which) {
-										Bundle params = new Bundle();
-										nextPage.putExtra(NAME, name);
-										nextPage.putExtra(CID, ids[pos]);
-										startActivity(nextPage);
-									}
 
-								}).setNegativeButton(R.string.no, null).show();
+				pos = parent.getPositionForView(view);
+				final String fname = contacts[pos].getfirst();
+				final String lname = contacts[pos].getlast();
+				nextPage.putExtra(FNAME, fname);
+				nextPage.putExtra(LNAME, lname);
+				nextPage.putExtra(CID, ids[pos]);
+				startActivity(nextPage);
 			}
 		});
 	}
@@ -95,20 +74,20 @@ public class FilterAttendees extends ListActivity {
 	private String[] getStringArrayList() {
 		// get all attendees
 
-		Contact[] contacts = helper.getAllAttendees();
+		contacts = helper.getAllAttendees();
 		String[] toReturn = new String[contacts.length];
 		ids = new long[contacts.length];
-		for (int i = 0; i<contacts.length; i++){
+		for (int i = 0; i < contacts.length; i++) {
 			toReturn[i] = contacts[i].getName();
 			ids[i] = contacts[i].getID();
 		}
-		
-		//ids = s[0];
-		
+
+		// ids = s[0];
+
 		// ArrayList[] ss;
 		// ss[1] == attendee name
 		// ss[0] == attendee id;
-		// 
+		//
 		return toReturn;
 	}
 
@@ -132,6 +111,20 @@ public class FilterAttendees extends ListActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 		filterText.removeTextChangedListener(filterTextWatcher);
+	}
+
+	public void manualAdd(View v) {
+		
+		String name = filterText.getText().toString().trim();
+		
+		if(name.length() == 0){ return;} //button is useless when there is nothing written 
+		
+		String[] names = name.split(" ", 2);
+		nextPage.putExtra(FNAME, names[0]);
+		if(names.length == 2){ 
+			nextPage.putExtra(LNAME, names[1]);	
+		}
+		startActivity(nextPage);
 	}
 
 }

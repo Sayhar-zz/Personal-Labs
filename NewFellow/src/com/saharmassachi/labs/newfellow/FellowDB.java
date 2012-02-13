@@ -20,7 +20,7 @@ import static com.saharmassachi.labs.newfellow.Constants.RAWLOC;
 
 import static com.saharmassachi.labs.newfellow.Constants.NAME_TABLE;
 import static com.saharmassachi.labs.newfellow.Constants.CID;
-import static com.saharmassachi.labs.newfellow.Constants.NAME;
+//import static com.saharmassachi.labs.newfellow.Constants.NAME;
 import static com.saharmassachi.labs.newfellow.Constants.PHONE;
 import static com.saharmassachi.labs.newfellow.Constants.EMAIL;
 import static com.saharmassachi.labs.newfellow.Constants.TWITTER;
@@ -35,7 +35,7 @@ import static com.saharmassachi.labs.newfellow.Constants.PRELOAD_TABLE;
 
 public class FellowDB extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "fellow.db";
-	private static final int DATABASE_VERSION = 2; 
+	private static final int DATABASE_VERSION = 1; 
 	private static final String TAG = "FellowDB";
 
 	
@@ -54,7 +54,8 @@ public class FellowDB extends SQLiteOpenHelper {
 	
 	private String CREATE_TABLE_2 ="CREATE TABLE " + NAME_TABLE + " ( " +
 			CID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-			NAME + " TEXT, " +
+			FNAME + " TEXT, " +
+			LNAME + " TEXT, " +
 			PHONE + " TEXT, " +
 			EMAIL + " TEXT, " +
 			TWITTER + " TEXT, " +

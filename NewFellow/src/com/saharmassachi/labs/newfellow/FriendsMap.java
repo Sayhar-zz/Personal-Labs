@@ -64,19 +64,14 @@ public class FriendsMap extends MapActivity {
 		zoomLevel = map.getZoomLevel();
 		datahelper = new DBhelper(this);
 		makeDownloadThread();
-		
-		ArrayList<SimpleContact> plottables = datahelper.getAllSimpleContacts();  
-//			new ArrayList<SimpleContact>();   //datahelper.getMyHistory();
-		//plottables.add(new SimpleContact(11,13,"brandon", "Southwood plantation road", 1,1));
-		overlayAdder(plottables, itemizedoverlay);
-		
+		//check onResume for the place where we add more plots on the map.
 		mapOverlays.add(itemizedoverlay);
 		
 		
 		
 		//temporary:
 		/*GeoPoint point = new GeoPoint(19240000,-99120000);
-		OverlayItem overlayitem = new OverlayItem(point, "Hola, Mundo!", "I'm in Mexico City!");
+		ContactOverlayItem overlayitem = new ContactOverlayItem(point, "Hola, Mundo!", "I'm in Mexico City!");
 		itemizedoverlay.addToOverlay(overlayitem);
 		mapOverlays.add(itemizedoverlay);*/
 	}
@@ -256,8 +251,11 @@ public class FriendsMap extends MapActivity {
 		if (!settings.contains(MYID)) {
 			Intent i = new Intent(this, Login.class);
 			startActivity(i);
-
-		} 
+		}
+		
+		ArrayList<SimpleContact> plottables = datahelper.getAllSimpleContacts();  
+		overlayAdder(plottables, itemizedoverlay);
+		
 	}
 
 	public void goAddNew(View v){
@@ -266,4 +264,8 @@ public class FriendsMap extends MapActivity {
     	startActivity(i);
     }
 
+	public void seeContacts(View v){
+		Intent i = new Intent(this, ViewContacts.class);
+    	startActivity(i);
+	}
 }

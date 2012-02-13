@@ -21,7 +21,7 @@ public interface Constants extends BaseColumns {
 	
 	public static final String NAME_TABLE = "contact";
 	public static final String CID = "nid";
-	public static final String NAME = "name";
+	//public static final String NAME = "name";
 
 	public static final String PHONE = "phone";
 	public static final String EMAIL = "email";

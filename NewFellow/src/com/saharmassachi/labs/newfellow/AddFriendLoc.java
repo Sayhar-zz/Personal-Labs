@@ -35,10 +35,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import static com.saharmassachi.labs.newfellow.Constants.LOCATION_TABLE;
 import static com.saharmassachi.labs.newfellow.Constants.NAME_TABLE;
-import static com.saharmassachi.labs.newfellow.Constants.NAME;
 import static com.saharmassachi.labs.newfellow.Constants.CID;
-
-
+import static com.saharmassachi.labs.newfellow.Constants.FNAME;
+import static com.saharmassachi.labs.newfellow.Constants.LNAME;
 
 public class AddFriendLoc extends Activity implements OnClickListener {
 	public static final String APP_ID = "234125573324281";
@@ -63,7 +62,8 @@ public class AddFriendLoc extends Activity implements OnClickListener {
 	private Facebook mFacebook;
 	private AsyncFacebookRunner mAsyncRunner;
 	
-	private String name;
+	private String fname;
+	private String lname;
 	
 	private EditText etPhone;
 	private TextView etEmail;
@@ -96,9 +96,15 @@ public class AddFriendLoc extends Activity implements OnClickListener {
 		
 		Bundle extras = getIntent().getExtras();
 		
-		name = extras.getString(NAME);
+		fname = extras.getString(FNAME);
+		if(extras.containsKey(LNAME)){
+			lname = extras.getString(LNAME);
+		}
+		else{
+			lname = ".";
+		}
 		id = extras.getLong(CID);
-		tvname.setText(name);
+		tvname.setText(fname + " " + lname);
 		
 		trySetAddress();
 		
@@ -131,8 +137,8 @@ public class AddFriendLoc extends Activity implements OnClickListener {
 	public void trySetAddress() {
 		// name = name.substring(1, name.length()-1);
 		try {
-			String[] names = name.split(" ");
-			String[] atnd = helper.getOneAttendee(names[0], names[1]);
+			
+			String[] atnd = helper.getOneAttendee(fname, lname);
 			String city = atnd[3];
 			if (city != null) {
 				etaddress.setText(city);
@@ -187,7 +193,7 @@ public class AddFriendLoc extends Activity implements OnClickListener {
 			Toast.makeText(this, "record " + i + " saved", Toast.LENGTH_LONG).show();
 			tv1.setText(helper.quickanddirtyGetRecordGivenID(i, LOCATION_TABLE));
 			
-			long j = helper.addContact(name, phone, mail, tweet, i);
+			long j = helper.addContact(fname, lname, phone, mail, tweet, i);
 			tv1.append("name:");
 			tv1.append(helper.quickanddirtyGetRecordGivenID(j, NAME_TABLE));
 			break;
