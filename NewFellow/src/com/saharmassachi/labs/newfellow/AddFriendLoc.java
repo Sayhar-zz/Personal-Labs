@@ -35,6 +35,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import static com.saharmassachi.labs.newfellow.Constants.LOCATION_TABLE;
 import static com.saharmassachi.labs.newfellow.Constants.NAME_TABLE;
+import static com.saharmassachi.labs.newfellow.Constants.NAME;
+import static com.saharmassachi.labs.newfellow.Constants.CID;
 
 
 
@@ -66,7 +68,7 @@ public class AddFriendLoc extends Activity implements OnClickListener {
 	private EditText etPhone;
 	private TextView etEmail;
 	private TextView etTweet;
-	
+	private long id;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -94,7 +96,8 @@ public class AddFriendLoc extends Activity implements OnClickListener {
 		
 		Bundle extras = getIntent().getExtras();
 		
-		name = extras.getString("name");
+		name = extras.getString(NAME);
+		id = extras.getLong(CID);
 		tvname.setText(name);
 		
 		trySetAddress();
@@ -128,12 +131,11 @@ public class AddFriendLoc extends Activity implements OnClickListener {
 	public void trySetAddress() {
 		// name = name.substring(1, name.length()-1);
 		try {
-			String[] atnd = helper.getOneAttendee(name);
-			String city = atnd[2];
+			String[] names = name.split(" ");
+			String[] atnd = helper.getOneAttendee(names[0], names[1]);
+			String city = atnd[3];
 			if (city != null) {
 				etaddress.setText(city);
-				//This happens every time. WHY? 
-				//Oh well, O-R model will fi.
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

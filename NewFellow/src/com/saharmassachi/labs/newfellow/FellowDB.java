@@ -29,11 +29,13 @@ import static com.saharmassachi.labs.newfellow.Constants.PRIMARYLOC;
 
 import static com.saharmassachi.labs.newfellow.Constants.AID;
 import static com.saharmassachi.labs.newfellow.Constants.WORK;
+import static com.saharmassachi.labs.newfellow.Constants.FNAME;
+import static com.saharmassachi.labs.newfellow.Constants.LNAME;
 import static com.saharmassachi.labs.newfellow.Constants.PRELOAD_TABLE;
 
 public class FellowDB extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "fellow.db";
-	private static final int DATABASE_VERSION = 8; 
+	private static final int DATABASE_VERSION = 2; 
 	private static final String TAG = "FellowDB";
 
 	
@@ -62,7 +64,8 @@ public class FellowDB extends SQLiteOpenHelper {
 		 
 	private String CREATE_TABLE_3 = "CREATE TABLE " + PRELOAD_TABLE + " ( " +
 			AID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-			NAME + " TEXT, " +
+			FNAME + " TEXT, " +
+			LNAME + " TEXT, " +
 			CITY + " TEXT, " +
 			WORK + " TEXT);";
 		

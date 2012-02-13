@@ -22,6 +22,7 @@ public interface Constants extends BaseColumns {
 	public static final String NAME_TABLE = "contact";
 	public static final String CID = "nid";
 	public static final String NAME = "name";
+
 	public static final String PHONE = "phone";
 	public static final String EMAIL = "email";
 	public static final String TWITTER = "twitter";
@@ -29,9 +30,13 @@ public interface Constants extends BaseColumns {
 	public static final String PRIMARYLOC = "primaryloc";
 	
 	public static final String PRELOAD_TABLE = "attendees";
+	public static final String FNAME = "firstname";
+	public static final String LNAME = "lastname";
 	public static final String WORK = "work";
 	public static final String AID = "aid";
 	
-	
+	public static final String MYID= "myid";
+	public static final String PREFSNAME = "myinfo";
+	public static final String SINCE = "since";
 }
 

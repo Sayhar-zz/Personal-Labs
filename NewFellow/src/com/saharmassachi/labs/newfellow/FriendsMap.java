@@ -1,9 +1,14 @@
 package com.saharmassachi.labs.newfellow;
 
+import static com.saharmassachi.labs.newfellow.Constants.MYID;
+import static com.saharmassachi.labs.newfellow.Constants.PREFSNAME;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -46,7 +51,6 @@ public class FriendsMap extends MapActivity {
 		setContentView(R.layout.map);
 
 		etSearch = (EditText) findViewById(R.id.searchMap);
-		
 		//instantiates HappyData and creates an arraylist of all the bottles
 		//HappyData datahelper = new HappyData(this);
 		//ArrayList<HappyBottle> plottables = datahelper.getMyHistory();
@@ -59,6 +63,7 @@ public class FriendsMap extends MapActivity {
 		center = new GeoPoint(-1,-1);
 		zoomLevel = map.getZoomLevel();
 		datahelper = new DBhelper(this);
+		makeDownloadThread();
 		
 		ArrayList<SimpleContact> plottables = datahelper.getAllSimpleContacts();  
 //			new ArrayList<SimpleContact>();   //datahelper.getMyHistory();
@@ -213,6 +218,21 @@ public class FriendsMap extends MapActivity {
 	}
 	
 	
+	
+	private void makeDownloadThread() {
+		// TODO in the future this will not call h.getAllAttendees but a different method.
+		
+		Runnable r = new Runnable() {
+			@Override
+			public void run() {
+				datahelper.downAllAttendees();
+			}
+		};
+		new Thread(r).start();
+	}
+	
+	
+	
 	//Disables MyLocation
 	@Override
 	protected void onPause() {
@@ -231,7 +251,19 @@ public class FriendsMap extends MapActivity {
 		userLocationOverlay.enableMyLocation();
 //		zpl = new ZoomPanListener();
 //		zpl.execute(null);
+		
+		SharedPreferences settings = getSharedPreferences(PREFSNAME, 0);
+		if (!settings.contains(MYID)) {
+			Intent i = new Intent(this, Login.class);
+			startActivity(i);
+
+		} 
 	}
 
+	public void goAddNew(View v){
+    	//Intent i = new Intent(this, AddName.class);
+		Intent i = new Intent(this, FilterAttendees.class);
+    	startActivity(i);
+    }
 
 }
