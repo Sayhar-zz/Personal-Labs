@@ -26,17 +26,18 @@ public class NetHelper {
 
 	public static final String appKey = "VM5ROYOT7FUHFXZ65D";
 
-	public static ArrayList<String[]> downAllAttendees() {
+	public static ArrayList<String[]> downAllAttendees(long since) {
 
-		// also remember to change count to 5000 or something
-		//
+		//TODO = change downAllAttendees to use heroku.
+		//since is the unixtimestamp of the last time it downloaded. 
+		//if since == 0 , this is the first time, so download them all.
 		ArrayList<String[]> a = null;
 		try {
 			String page = "";
 			HttpGet request = new HttpGet();
 			String rootscampid = "2025659803";
 			String baseURL = "http://www.eventbrite.com/json/event_list_attendees?app_key="
-					+ appKey + "&id=" + rootscampid + "&count=20";
+					+ appKey + "&id=" + rootscampid + "&count=100";
 
 			request.setURI(new URI(baseURL));
 			page = connectionHelper(request);
@@ -67,14 +68,14 @@ public class NetHelper {
 				String work;
 				try{
 					city = "'"+ o.getString("home_city") + "'";
-					if(city.trim().equals("")) city = null;
+					if(city.trim().equals("''")) city = null;
 				}
 				catch(Exception e){
 					city = null;
 				}
 				try{
 					work = "'" + o.getString("company") + "'";
-					if(work.trim().equals("")) work = null;
+					if(work.trim().equals("''")) work = null;
 				}
 				catch(Exception e){
 					work = null;
@@ -125,4 +126,12 @@ public class NetHelper {
 		return page;
 	}
 
+	public static void uploadMyInfo(Contact c) {
+		//given contact c (me!), send it to the heroku server;
+		//TODO this
+		
+	}
+
+	
+	
 }

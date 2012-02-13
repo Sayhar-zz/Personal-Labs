@@ -35,6 +35,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import static com.saharmassachi.labs.newfellow.Constants.LOCATION_TABLE;
 import static com.saharmassachi.labs.newfellow.Constants.NAME_TABLE;
+import static com.saharmassachi.labs.newfellow.Constants.NAME;
+import static com.saharmassachi.labs.newfellow.Constants.CID;
 
 
 
@@ -66,7 +68,7 @@ public class AddFriendLoc extends Activity implements OnClickListener {
 	private EditText etPhone;
 	private TextView etEmail;
 	private TextView etTweet;
-	
+	private long id;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -94,7 +96,8 @@ public class AddFriendLoc extends Activity implements OnClickListener {
 		
 		Bundle extras = getIntent().getExtras();
 		
-		name = extras.getString("name");
+		name = extras.getString(NAME);
+		id = extras.getLong(CID);
 		tvname.setText(name);
 		
 		trySetAddress();

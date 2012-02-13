@@ -35,6 +35,8 @@ public interface Constants extends BaseColumns {
 	public static final String WORK = "work";
 	public static final String AID = "aid";
 	
-	
+	public static final String MYID= "myid";
+	public static final String PREFSNAME = "myinfo";
+	public static final String SINCE = "since";
 }
 

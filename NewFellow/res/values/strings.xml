@@ -14,4 +14,5 @@
  	<string name="askemail">Email?</string>
  	<string name="asktwitter">Twitter?</string>
  	<string name="dbadd">Add to Database</string>
+ 	<string name="manualAdd">Add Manually</string>
 </resources>
