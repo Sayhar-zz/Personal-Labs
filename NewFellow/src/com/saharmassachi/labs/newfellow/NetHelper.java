@@ -60,8 +60,9 @@ public class NetHelper {
 				JSONObject o = jarray.getJSONObject(i);
 				
 				o = o.getJSONObject("attendee");
-				String name;
-				name = "'" + o.getString("first_name") + " " + o.getString("last_name") + "'";
+				String fname, lname;
+				fname = o.getString("first_name"); 
+				lname = o.getString("last_name");
 				String city;
 				String work;
 				try{
@@ -78,7 +79,7 @@ public class NetHelper {
 				catch(Exception e){
 					work = null;
 				}
-				String[] s = {name, city, work };
+				String[] s = {fname, lname, city, work };
 				a.add(s);
 			}
 

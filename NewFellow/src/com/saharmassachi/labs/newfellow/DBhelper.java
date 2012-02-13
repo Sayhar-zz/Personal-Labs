@@ -33,6 +33,8 @@ import static com.saharmassachi.labs.newfellow.Constants.FBID;
 import static com.saharmassachi.labs.newfellow.Constants.PRIMARYLOC;
 
 import static com.saharmassachi.labs.newfellow.Constants.AID;
+import static com.saharmassachi.labs.newfellow.Constants.FNAME;
+import static com.saharmassachi.labs.newfellow.Constants.LNAME;
 import static com.saharmassachi.labs.newfellow.Constants.WORK;
 import static com.saharmassachi.labs.newfellow.Constants.PRELOAD_TABLE;
 
@@ -233,12 +235,12 @@ public class DBhelper {
 	protected String[] getAllAttendees(){
 		String[]  toReturn;
 		SQLiteDatabase db = fdb.getReadableDatabase();
-		String[] columns = {AID, NAME};
+		String[] columns = {AID, FNAME, LNAME};
 		Cursor c = db.query(PRELOAD_TABLE, columns, null, null, null, null, null);
 		toReturn = new String[c.getCount()];
 		int i = 0;
 		while(c.moveToNext()){
-			toReturn[i] = c.getString(1);
+			toReturn[i] = c.getString(1) + " " + c.getString(2);
 			i++;
 		}
 		c.close();
@@ -246,11 +248,15 @@ public class DBhelper {
 		return toReturn;
 	}
 	
-	protected String[] getOneAttendee(String name){
-		String[]  toReturn = new String[4];
+	protected String[] getOneAttendee(String fname, String lname){
+		String[]  toReturn = new String[5];
 		SQLiteDatabase db = fdb.getReadableDatabase();
-		Cursor c = db.query(PRELOAD_TABLE, null, NAME + "=" + name, null, null, null, null);
-		c.moveToFirst();
+		//String[] columns = {NAME};
+		Cursor c = db.query(PRELOAD_TABLE, null, FNAME + "='" + fname + "'" + " AND " + LNAME + " = '" + lname +"'", null, null, null, null);
+		//Cursor c = db.query(PRELOAD_TABLE, columns, NAME + "='aaron Ireland'" , null, null, null, null);
+		//String sql = "SELECT * FROM attendees WHERE name= ;
+		//Cursor c = db.rawQuery(sql, null);
+		boolean b = c.moveToFirst();
 		int j = c.getCount();
 		for (int i = 0 ; i < 4; i++){
 			toReturn[i] = c.getString(i);
@@ -268,13 +274,14 @@ public class DBhelper {
 		for (String[] s : a) {
 
 			values = new ContentValues();
-			values.put(NAME, s[0]);
+			values.put(FNAME, s[0]);
+			values.put(LNAME, s[1]);
 
-			if ((s[1] != null) && (s[1].trim() != "")) {
-				values.put(CITY, s[1]);}
+			if ((s[2] != null) && (s[2].trim() != "".trim())) {
+				values.put(CITY, s[2]);}
 
-			if ((s[2] != null) && (s[2].trim() != "")) {
-				values.put(WORK, s[2]);}
+			if ((s[3] != null) && (s[3].trim() != "")) {
+				values.put(WORK, s[3]);}
 			
 			if (!existsPreload(values)) { //avoiding dupes
 				db = fdb.getWritableDatabase(); //write to the table
@@ -294,7 +301,8 @@ public class DBhelper {
 	private boolean existsPreload(ContentValues values) {
 		SQLiteDatabase db = fdb.getReadableDatabase();
 		String[] columns = { AID };
-		String WHERE = NAME + " = " + values.getAsString(NAME);
+		String WHERE = FNAME + " = '" + values.getAsString(FNAME) + "'";
+		WHERE += " AND " + LNAME + " = '" + values.getAsString(LNAME) + "'";
 		if(values.containsKey(CITY)){
 			WHERE += " AND " + CITY + " = " + values.getAsString(CITY); 
 		}

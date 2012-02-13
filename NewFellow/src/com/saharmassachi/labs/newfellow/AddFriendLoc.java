@@ -128,12 +128,11 @@ public class AddFriendLoc extends Activity implements OnClickListener {
 	public void trySetAddress() {
 		// name = name.substring(1, name.length()-1);
 		try {
-			String[] atnd = helper.getOneAttendee(name);
-			String city = atnd[2];
+			String[] names = name.split(" ");
+			String[] atnd = helper.getOneAttendee(names[0], names[1]);
+			String city = atnd[3];
 			if (city != null) {
 				etaddress.setText(city);
-				//This happens every time. WHY? 
-				//Oh well, O-R model will fi.
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
