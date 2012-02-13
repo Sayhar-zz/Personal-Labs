@@ -32,12 +32,12 @@ public class FriendsMap extends MapActivity {
 	MyLocationOverlay userLocationOverlay;
 	List<Overlay> mapOverlays;
 	ItemizedContactOverlay itemizedoverlay;
-	Drawable drawable;
+	private Drawable drawable;
 	protected MapController controller;
 	int streetView;
 	boolean goToMyLocation;
-	DBhelper datahelper;
-	EditText etSearch;
+	private DBhelper datahelper;
+	private EditText etSearch;
 	//ZoomPanListener zpl;
 	//protected Handler handler = new Handler();
 	

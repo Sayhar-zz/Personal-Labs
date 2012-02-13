@@ -35,7 +35,7 @@ import static com.saharmassachi.labs.newfellow.Constants.PRELOAD_TABLE;
 
 public class FellowDB extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "fellow.db";
-	private static final int DATABASE_VERSION = 1; 
+	private static final int DATABASE_VERSION = 2; 
 	private static final String TAG = "FellowDB";
 
 	

@@ -112,7 +112,7 @@ public class DBhelper {
 		long toreturn = -1;
 		ContentValues values = new ContentValues();
 		values.put(FNAME, fname);
-		values.put(FNAME, lname);
+		values.put(LNAME, lname);
 		values.put(PRIMARYLOC, locationID);
 		values.put(EMAIL, email);
 		values.put(TWITTER, tweet);

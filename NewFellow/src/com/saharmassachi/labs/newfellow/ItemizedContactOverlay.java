@@ -78,12 +78,12 @@ public class ItemizedContactOverlay extends ItemizedOverlay<ContactOverlayItem> 
 		Button email = (Button) dialog.findViewById(R.id.emailbutton);
 		Button sms = (Button) dialog.findViewById(R.id.smsbutton);
 		Button phone = (Button) dialog.findViewById(R.id.phonebutton);
-		if(c.getPhone() != null){
+		if((c.getPhone() != null) && (c.getPhone().length() > 0)){
 			//if there is a phone number, then set the sms button to visible
 			sms.setVisibility(0);
 			phone.setVisibility(0);
 		}
-		if( c.getEmail() != null){
+		if((c.getEmail() != null) && (c.getEmail().length() > 0)){
 			//if there is an email address, then set the sms button to visible
 			email.setVisibility(0);
 		}
@@ -103,7 +103,7 @@ public class ItemizedContactOverlay extends ItemizedOverlay<ContactOverlayItem> 
 		    	  
 		      }
 		  });
-		if(c.getPhone() != null){
+		if((c.getPhone() != null) && (c.getPhone().length() > 0)){
 			sms.setOnClickListener(new OnClickListener() {
 
 			      @Override

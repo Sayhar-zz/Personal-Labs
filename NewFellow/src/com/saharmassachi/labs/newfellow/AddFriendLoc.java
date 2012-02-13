@@ -14,7 +14,6 @@ import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.Facebook;
 import com.facebook.android.FacebookError;
 import com.facebook.android.Util;
-import com.saharmassachi.labs.newfellow.NewFellowActivity.SampleRequestListener;
 import com.saharmassachi.labs.newfellow.book.BaseRequestListener;
 import com.saharmassachi.labs.newfellow.book.SessionStore;
 
