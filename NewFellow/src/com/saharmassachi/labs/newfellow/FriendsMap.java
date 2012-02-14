@@ -10,6 +10,7 @@ import java.util.List;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -267,5 +268,12 @@ public class FriendsMap extends MapActivity {
 	public void seeContacts(View v){
 		Intent i = new Intent(this, ViewContacts.class);
     	startActivity(i);
+	}
+	
+	public void seeSched(View v){
+		String url = "https://docs.google.com/spreadsheet/ccc?key=0ArpxecvCGBoMdDJXZEc5WGowNGJWaDRzQXJJa0d6bFE#gid=0";
+		Intent i = new Intent(Intent.ACTION_VIEW);
+		i.setData(Uri.parse(url));
+		startActivity(i);
 	}
 }

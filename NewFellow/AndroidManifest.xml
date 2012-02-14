@@ -50,7 +50,8 @@
             android:windowSoftInputMode="stateHidden" />
 		<activity
             android:label="ShowContact"
-            android:name="ShowContact"/>
+            android:name="ShowContact"
+            android:windowSoftInputMode="stateHidden" />
 		
         
         <uses-library android:name="com.google.android.maps" />

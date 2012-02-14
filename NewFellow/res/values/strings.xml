@@ -15,4 +15,7 @@
  	<string name="asktwitter">Twitter?</string>
  	<string name="dbadd">Add to Database</string>
  	<string name="manualAdd">Add Manually</string>
+ 	<string name="check">Check</string>
+ 	<string name="Location">Home Base:</string>
+ 	<string name="save">Save</string>
 </resources>

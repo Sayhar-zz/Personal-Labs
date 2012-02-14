@@ -75,6 +75,13 @@
                     android:background="@drawable/happytoggle"
                     android:layout_marginRight="10dp"
                     android:onClick="seeContacts" />
+        	
+        	<Button android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="schedule"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="10dp"
+                    android:onClick="seeSched" />
 		</TableRow>  
 	</TableLayout>
 	

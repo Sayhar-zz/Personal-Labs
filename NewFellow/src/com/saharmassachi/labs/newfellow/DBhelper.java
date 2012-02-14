@@ -48,7 +48,7 @@ import static com.saharmassachi.labs.newfellow.Constants.SINCE;
 
 public class DBhelper {
 	private FellowDB fdb;
-	private ReadWriteLock globalLock;
+	private static ReadWriteLock globalLock;
 	private Lock readLock;
 	private Lock writeLock;
 	private Context ctx;
@@ -106,8 +106,7 @@ public class DBhelper {
 		return toreturn;
 	}
 
-	protected long addContact(String fname, String lname, String phone, String email,
-			String tweet, long locationID) {
+	protected long addContact(String fname, String lname, String phone, String email, String tweet, long locationID) {
 		writeLock.lock();
 		long toreturn = -1;
 		ContentValues values = new ContentValues();

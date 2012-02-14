@@ -6,19 +6,6 @@ import android.app.Activity;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.facebook.android.AsyncFacebookRunner;
-import com.facebook.android.Facebook;
-import com.facebook.android.FacebookError;
-import com.facebook.android.Util;
-import com.saharmassachi.labs.newfellow.book.BaseRequestListener;
-import com.saharmassachi.labs.newfellow.book.SessionStore;
-
-import android.app.Activity;
-import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -58,9 +45,6 @@ public class AddFriendLoc extends Activity implements OnClickListener {
 	private int whichAddress;
 	private DBhelper helper;
 	
-	private Facebook mFacebook;
-	private AsyncFacebookRunner mAsyncRunner;
-	
 	private String fname;
 	private String lname;
 	
@@ -88,10 +72,6 @@ public class AddFriendLoc extends Activity implements OnClickListener {
 		tvname = (TextView) findViewById(R.id.nametext);
 		tv1 = (TextView) findViewById(R.id.textView1);
 		addToDB.setOnClickListener(this);
-		
-		mFacebook = new Facebook(APP_ID);
-	   	mAsyncRunner = new AsyncFacebookRunner(mFacebook);
-		SessionStore.restore(mFacebook, this);
 		
 		Bundle extras = getIntent().getExtras();
 		
@@ -200,33 +180,5 @@ public class AddFriendLoc extends Activity implements OnClickListener {
 
 	}
 	
-	public void requestButton(View v){
-    	mAsyncRunner.request("me", new SampleRequestListener());
-    }
 	
-	public class SampleRequestListener extends BaseRequestListener {
-
-        public void onComplete(final String response, final Object state) {
-            try {
-                // process the response here: executed in background thread
-                Log.d("Facebook-Example", "Response: " + response.toString());
-                JSONObject json = Util.parseJson(response);
-                final String name = json.getString("name");
-
-                // then post the processed result back to the UI thread
-                // if we do not do this, an runtime exception will be generated
-                // e.g. "CalledFromWrongThreadException: Only the original
-                // thread that created a view hierarchy can touch its views."
-               AddFriendLoc.this.runOnUiThread(new Runnable() {
-                    public void run() {
-                        tv1.setText("Hello there, " + name + "!");
-                    }
-                });
-            } catch (JSONException e) {
-                Log.w("Facebook-Example", "JSON Error in response");
-            } catch (FacebookError e) {
-                Log.w("Facebook-Example", "Facebook Error: " + e.getMessage());
-            }
-        }
-    }
 }
