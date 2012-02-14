@@ -18,4 +18,6 @@
  	<string name="check">Check</string>
  	<string name="Location">Home Base:</string>
  	<string name="save">Save</string>
+ 	<string name="askBadge">Badge ID?</string>
+ 	<string name="askName">Name?</string>
 </resources>

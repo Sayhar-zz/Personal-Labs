@@ -38,38 +38,62 @@ public class FellowDB extends SQLiteOpenHelper {
 	private static final int DATABASE_VERSION = 2; 
 	private static final String TAG = "FellowDB";
 
-	
+
 	private String CREATE_TABLE_1 = "CREATE TABLE " +  LOCATION_TABLE +" (" +
-			LID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-			LAT + " INTEGER, " +
-			LONG + " INTEGER, " +
-			STATE + " TEXT, " +
-			ZIP + " TEXT, " +
-			ZIPSUFFIX + " TEXT, " +
-			STREETNAME + " TEXT, " +
-			NUMBER + " INTEGER, " +
-			CITY + " TEXT, "+
-			RAWLOC + " TEXT);"
-			;
-	
+		LID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+		LAT + " INTEGER, " +
+		LONG + " INTEGER, " +
+		STATE + " TEXT, " +
+		ZIP + " TEXT, " +
+		ZIPSUFFIX + " TEXT, " +
+		STREETNAME + " TEXT, " +
+		NUMBER + " INTEGER, " +
+		CITY + " TEXT, "+
+		RAWLOC + " TEXT);"
+		;
+
 	private String CREATE_TABLE_2 ="CREATE TABLE " + NAME_TABLE + " ( " +
-			CID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-			FNAME + " TEXT, " +
-			LNAME + " TEXT, " +
-			PHONE + " TEXT, " +
-			EMAIL + " TEXT, " +
-			TWITTER + " TEXT, " +
-			FBID + " TEXT, " +
-			PRIMARYLOC + " INTEGER, " +
-			"FOREIGN KEY(" + PRIMARYLOC + ") REFERENCES " + LOCATION_TABLE + "(" + LID + "));";
-		 
+		CID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+		FNAME + " TEXT, " +
+		LNAME + " TEXT, " +
+		PHONE + " TEXT, " +
+		EMAIL + " TEXT, " +
+		TWITTER + " TEXT, " +
+		FBID + " TEXT, " +
+		PRIMARYLOC + " INTEGER, " +
+		"FOREIGN KEY(" + PRIMARYLOC + ") REFERENCES " + LOCATION_TABLE + "(" + LID + "));";
+/*
+	private String CREATE_PUBLIC_TABLE = "CREATE TABLE " + ATTENDEE_TABLE + " ( " +
+		BID + " INTEGER PRIMARY KEY, " +
+		FNAME + " TEXT, " +
+		LNAME + " TEXT, " +
+		PHONE + " TEXT, " +
+		EMAIL + " TEXT, " +
+		TWITTER + " TEXT, " +
+		FBID + " TEXT, " +
+		LAT + " INTEGER, " +
+		LONG + " INTEGER, " +
+		RAWLOC + " TEXT );"; */
+
+	/*private String CREATE_CONTACTS_TABLE = "CREATE TABLE " + CONTACTS_TABLE + " ( " +
+		CID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+		FNAME + " TEXT, " +			LNAME + " TEXT, " +
+		PHONE + " TEXT, " +
+		EMAIL + " TEXT, " +
+		TWITTER + " TEXT, " +
+		FBID + " TEXT, " +
+		LAT + " INTEGER, " +
+		LONG + " INTEGER, " +
+		RAWLOC + " TEXT, " +
+		UPLOADED + " INTEGER);"; */
+
 	private String CREATE_TABLE_3 = "CREATE TABLE " + PRELOAD_TABLE + " ( " +
-			AID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-			FNAME + " TEXT, " +
-			LNAME + " TEXT, " +
-			CITY + " TEXT, " +
-			WORK + " TEXT);";
-		
+		AID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+		FNAME + " TEXT, " +
+		LNAME + " TEXT, " +
+		CITY + " TEXT, " +
+		WORK + " TEXT);";
+
 	public FellowDB(Context ctx){
 		super(ctx, DATABASE_NAME, null, DATABASE_VERSION);
 	}
@@ -79,7 +103,7 @@ public class FellowDB extends SQLiteOpenHelper {
 		db.execSQL(CREATE_TABLE_1);
 		db.execSQL(CREATE_TABLE_2);
 		db.execSQL(CREATE_TABLE_3);
-		
+
 	}
 
 	@Override
@@ -88,7 +112,7 @@ public class FellowDB extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS " + NAME_TABLE);
 		db.execSQL("DROP TABLE IF EXISTS " + LOCATION_TABLE);
 		db.execSQL("DROP TABLE IF EXISTS " + PRELOAD_TABLE);
-	    onCreate(db);
-		
+		onCreate(db);
+
 	}
 }

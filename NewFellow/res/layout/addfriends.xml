@@ -9,132 +9,177 @@
         android:layout_height="match_parent"
         android:orientation="vertical" >
 
-        <RelativeLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
+        <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/askphone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:text="@string/askphone"
-                android:layout_alignBaseline="@+id/getphone"
-                android:textSize="20sp" />
-            
-            <EditText
-                android:id="@+id/getphone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:textSize="20sp"
-                android:inputType="phone"
-                android:layout_toRightOf="@+id/askphone" />
-            
-            <TextView
-                android:id="@+id/askemail"
-                android:layout_below="@+id/askphone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignBaseline="@+id/getemail"
-                android:text="@string/askemail"
-                android:textSize="20sp" />
-
-            <EditText
-                android:id="@+id/getemail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-				android:inputType="textEmailAddress"
-                android:layout_below="@+id/getphone"
-                android:layout_toRightOf="@+id/askemail" 
-                android:textSize="20sp"/>
-
-            <TextView
-                android:id="@+id/asktwitter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/askemail"
-                android:layout_alignBaseline="@+id/gettwitter"
-                android:text="@string/asktwitter"
-                android:textSize="20sp" />
-
-            <EditText
-                android:id="@+id/gettwitter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:inputType="textShortMessage|textNoSuggestions"
-                android:layout_toRightOf="@+id/asktwitter"
-                android:layout_below="@+id/getemail"
-                android:textSize="20sp"
-                 />
-        </RelativeLayout>
-
-        <TextView
-            android:id="@+id/nametext"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <RelativeLayout
-            android:id="@+id/relativeLayout1"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.73" >
+            android:baselineAligned="true" >
 
-            <TextView
-                android:id="@+id/textView3"
+            <TableRow
+                android:id="@+id/tableRow0"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/friendname"
-                android:text="What is their address?"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:gravity="center_vertical|center_horizontal" >
 
-            <EditText
-                android:id="@+id/friendaddress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/textView3"
-                android:inputType="textPostalAddress" >
+                <TextView
+                    android:id="@+id/nametext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
+</TableRow>
+                <TableRow
+                    android:id="@+id/tableRow2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" >
 
-                <requestFocus />
-            </EditText>
+                    <TextView
+                        android:id="@+id/askphone"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/getphone"
+                        android:layout_margin="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="@string/askphone"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/friendaddress"
-                android:onClick="getAddressInfo"
-                android:text="Push" />
+                    <EditText
+                        android:id="@+id/getphone"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_margin="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="2"
+                        android:inputType="number"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                </TableRow>
 
-            <Button
-                android:id="@+id/friendDbAdd"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/spincheck"
-                android:text="Add to DB"
-                android:visibility="invisible" />
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" >
 
-            <Spinner
-                android:id="@+id/spincheck"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/button1" />
-        </RelativeLayout>
+                    <TextView
+                        android:id="@+id/askemail"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/getemail"
+                        android:layout_margin="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="@string/askemail"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sup?" />
+                    <EditText
+                        android:id="@+id/getemail"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="2"
+                        android:inputType="textEmailAddress"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRow4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" >
+
+                    <TextView
+                        android:id="@+id/TextView4a"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/gettwitter"
+                        android:layout_margin="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="@string/asktwitter"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    <EditText
+                        android:id="@+id/gettwitter"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="2"
+                        android:inputType="textEmailAddress"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal" >
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:layout_weight="1"
+                        android:text="@string/Location"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal" >
+
+                    <EditText
+                        android:id="@+id/friendaddress"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:inputType="textPostalAddress" >
+                    </EditText>
+
+                    <Button
+                        android:id="@+id/checkLoc"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:onClick="getAddressInfo"
+                        android:text="@string/check" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+
+                    <Spinner
+                        android:id="@+id/spincheck"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+                </TableRow>
+
+                <Button
+                    android:id="@+id/friendDbAdd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@+id/spincheck"
+                    android:text="Add to DB"
+                    android:visibility="invisible" />
+
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sup?" />
+            
+        </TableLayout>
     </LinearLayout>
 
 </ScrollView>
