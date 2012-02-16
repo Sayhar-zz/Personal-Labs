@@ -5,6 +5,13 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
+    <!-- Sahar's API key: 0_9Pks7VkRuhX3CGkkeQsPHyWtt26wWT8sI_Sig
+	android:apiKey="0_9Pks7VkRuhX3CGkkeQsPHyWtt26wWT8sI_Sig"
+	
+	Final API key that works for the app itself:
+	0_9Pks7VkRugmXYwlX2CugogGcGPuoYM8ln0XIg
+	android:apiKey="0_9Pks7VkRugmXYwlX2CugogGcGPuoYM8ln0XIg" 
+	-->
     <view
         android:id="@+id/themap"
         android:layout_width="fill_parent"

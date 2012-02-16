@@ -8,14 +8,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import static com.saharmassachi.labs.newfellow.Constants.LAT;
 import static com.saharmassachi.labs.newfellow.Constants.LONG;
-import static com.saharmassachi.labs.newfellow.Constants.CITY;
-import static com.saharmassachi.labs.newfellow.Constants.LID;
-import static com.saharmassachi.labs.newfellow.Constants.LOCATION_TABLE;
-import static com.saharmassachi.labs.newfellow.Constants.NUMBER;
-import static com.saharmassachi.labs.newfellow.Constants.STATE;
-import static com.saharmassachi.labs.newfellow.Constants.STREETNAME;
-import static com.saharmassachi.labs.newfellow.Constants.ZIP;
-import static com.saharmassachi.labs.newfellow.Constants.ZIPSUFFIX;
 import static com.saharmassachi.labs.newfellow.Constants.RAWLOC;
 
 import static com.saharmassachi.labs.newfellow.Constants.PRIVATE_TABLE;
@@ -26,15 +18,14 @@ import static com.saharmassachi.labs.newfellow.Constants.PHONE;
 import static com.saharmassachi.labs.newfellow.Constants.EMAIL;
 import static com.saharmassachi.labs.newfellow.Constants.TWITTER;
 import static com.saharmassachi.labs.newfellow.Constants.FBID;
-import static com.saharmassachi.labs.newfellow.Constants.PRIMARYLOC;
+//import static com.saharmassachi.labs.newfellow.Constants.PRIMARYLOC;
 
-import static com.saharmassachi.labs.newfellow.Constants.NAME_TABLE;
+
 import static com.saharmassachi.labs.newfellow.Constants.BID;
 //import static com.saharmassachi.labs.newfellow.Constants.AID;
 import static com.saharmassachi.labs.newfellow.Constants.WORK;
 import static com.saharmassachi.labs.newfellow.Constants.FNAME;
 import static com.saharmassachi.labs.newfellow.Constants.LNAME;
-import static com.saharmassachi.labs.newfellow.Constants.PRELOAD_TABLE;
 import static com.saharmassachi.labs.newfellow.Constants.UPLOADED;
 
 
@@ -133,5 +124,12 @@ public class FellowDB extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS " + PUBLIC_TABLE);
 		onCreate(db);
 
+	}
+	
+	public void clearTable(SQLiteDatabase db, String s){
+		if(s.equalsIgnoreCase(PUBLIC_TABLE)){
+			db.execSQL("DROP TABLE IF EXISTS " + PUBLIC_TABLE);
+			db.execSQL(CREATE_PUBLIC_TABLE);
+		}
 	}
 }

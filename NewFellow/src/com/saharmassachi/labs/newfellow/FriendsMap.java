@@ -52,10 +52,6 @@ public class FriendsMap extends MapActivity {
 		setContentView(R.layout.map);
 
 		etSearch = (EditText) findViewById(R.id.searchMap);
-		//instantiates HappyData and creates an arraylist of all the bottles
-		//HappyData datahelper = new HappyData(this);
-		//ArrayList<HappyBottle> plottables = datahelper.getMyHistory();
-		//initialize and display map view and user location
 		initMapView();
 		initOverlays();
 		initMyLocation();
@@ -65,16 +61,7 @@ public class FriendsMap extends MapActivity {
 		zoomLevel = map.getZoomLevel();
 		datahelper = new DataHelper(this);
 		makeDownloadThread();
-		//check onResume for the place where we add more plots on the map.
 		mapOverlays.add(itemizedoverlay);
-		
-		
-		
-		//temporary:
-		/*GeoPoint point = new GeoPoint(19240000,-99120000);
-		ContactOverlayItem overlayitem = new ContactOverlayItem(point, "Hola, Mundo!", "I'm in Mexico City!");
-		itemizedoverlay.addToOverlay(overlayitem);
-		mapOverlays.add(itemizedoverlay);*/
 	}
 	
 	@Override
@@ -165,31 +152,6 @@ public class FriendsMap extends MapActivity {
 		map.getOverlays().add(userLocationOverlay); //adds the users location overlay to the overlays being displayed
 	}
 
-	/*
-	//Our version of a listener - checks to see if the user moved.
-	private class ZoomPanListener extends AsyncTask<Void, Void, Void>{
-		@Override
-		protected Void doInBackground(Void... params) {
-			while(true){
-				if(zoomLevel != map.getZoomLevel()) {
-					handler.post(new Runnable(){
-						@Override
-						public void run(){
-							mapClear();
-							zoomLevel = map.getZoomLevel();}
-								
-					});	}
-				
-				if(isMoved() ){
-					drawRecentLocal();
-				}
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}}}}
-	
-	*/
 	
 	public void mapSearch(View v){
 		mapClear();
@@ -228,14 +190,14 @@ public class FriendsMap extends MapActivity {
 	
 	private void makeDownloadThread() {
 		// TODO in the future this will not call h.getAllAttendees but a different method.
-		
-		Runnable r = new Runnable() {
-			@Override
-			public void run() {
-				//datahelper.downPublic();
-			}
-		};
-		new Thread(r).start();
+		datahelper.downPublic();
+		//Runnable r = new Runnable() {
+		//	@Override
+		//	public void run() {
+		//		datahelper.downPublic();
+		//	}
+		//};
+		//new Thread(r).start();
 	}
 	
 	
@@ -269,7 +231,6 @@ public class FriendsMap extends MapActivity {
 	}
 
 	public void goAddNew(View v){
-    	//Intent i = new Intent(this, AddName.class);
 		Intent i = new Intent(this, FilterAttendees.class);
     	startActivity(i);
     }

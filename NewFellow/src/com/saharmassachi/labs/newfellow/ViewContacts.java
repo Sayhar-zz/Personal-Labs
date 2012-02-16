@@ -47,14 +47,8 @@ public class ViewContacts extends ListActivity {
 		nextPage = new Intent(this, ShowContact.class);
 
 		setListAdapter(adapter);
-		ProgressDialog dialog = ProgressDialog.show(this, "",
-				"Loading contacts", true, true);
-
-
-		while (adapter.isEmpty()) {
-			dialog.show();
-		}
-		dialog.dismiss();
+		
+		
 		
 		
 		

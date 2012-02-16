@@ -8,12 +8,6 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import static com.saharmassachi.labs.newfellow.Constants.BID;
-import static com.saharmassachi.labs.newfellow.Constants.CITY;
-import static com.saharmassachi.labs.newfellow.Constants.LID;
-import static com.saharmassachi.labs.newfellow.Constants.LOCATION_TABLE;
-import static com.saharmassachi.labs.newfellow.Constants.NAME_TABLE;
-import static com.saharmassachi.labs.newfellow.Constants.PRELOAD_TABLE;
-import static com.saharmassachi.labs.newfellow.Constants.PRIMARYLOC;
 import static com.saharmassachi.labs.newfellow.Constants.PRIVATE_TABLE;
 import static com.saharmassachi.labs.newfellow.Constants.CID;
 import static com.saharmassachi.labs.newfellow.Constants.FNAME;
@@ -21,14 +15,12 @@ import static com.saharmassachi.labs.newfellow.Constants.LNAME;
 import static com.saharmassachi.labs.newfellow.Constants.PHONE;
 import static com.saharmassachi.labs.newfellow.Constants.EMAIL;
 import static com.saharmassachi.labs.newfellow.Constants.PUBLIC_TABLE;
-import static com.saharmassachi.labs.newfellow.Constants.SINCE;
 import static com.saharmassachi.labs.newfellow.Constants.TWITTER;
 import static com.saharmassachi.labs.newfellow.Constants.FBID;
 import static com.saharmassachi.labs.newfellow.Constants.LAT;
 import static com.saharmassachi.labs.newfellow.Constants.LONG;
 import static com.saharmassachi.labs.newfellow.Constants.RAWLOC;
 import static com.saharmassachi.labs.newfellow.Constants.UPLOADED;
-import static com.saharmassachi.labs.newfellow.Constants.WORK;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -37,8 +29,10 @@ import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Address;
+import android.util.Log;
 
 public class DataHelper {
+	private static final String TAG = "DATAHELPER";
 	private FellowDB fdb;
 	private Context ctx;
 
@@ -59,10 +53,37 @@ public class DataHelper {
 	// )
 
 	public void downPublic() {
-		Net.downPublic();
-		this.downAllAttendees(); //temporary TODO
+		//clear the current public database;
+		try{
+			SQLiteDatabase db = fdb.getWritableDatabase();
+			fdb.clearTable(db, PUBLIC_TABLE);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		ArrayList<Contact> publics = Net.downPublic();
+
+		SQLiteDatabase db = fdb.getWritableDatabase(); // write to the table
+		try {
+			for (Contact c : publics) {
+				ContentValues values = contactToValues(c);
+				
+					try {
+						values.remove(BID);
+						values.remove(UPLOADED);
+						db.insertOrThrow(PUBLIC_TABLE, null, values);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				
+			}
+		} finally {
+			db.close();
+		}
+
 	}
 
+	
 	public void downPrivate() {
 		Net.downPrivate();
 	}
@@ -493,6 +514,9 @@ public class DataHelper {
 	}
 	
 	private ContentValues contactToValues(Contact c){
+		//this assumes that there is a badge ID.
+		//This also sets UPLOADED to -1;
+		//fix both by removing those keys if these assumptions are not true.
 		ContentValues values = new ContentValues();
 		String b = c.getBase();
 		String e = c.getEmail();
@@ -523,7 +547,11 @@ public class DataHelper {
 			values.put(TWITTER, t);
 		}
 		// we don't need to check these, because every contact needs a lat/long
-		values.put(BID, badge);
+		if(badge > -1){
+			values.put(BID, badge);
+			Log.e(TAG, "No badge id. This is probably an error");
+		}
+		
 		values.put(LAT, lat);
 		values.put(LONG, lng);
 		values.put(UPLOADED, -1); // no booleans in SQLite. This means that this
@@ -531,14 +559,7 @@ public class DataHelper {
 		return values;
 	}
 	
-	// given string s - is it not null and length > 0?
-	private boolean check(String s){
-		if((s != null) && (s.length() > 1)){
-			return true;
-		}
-		return false;
-	}
-
+	
 
 
 	
@@ -558,15 +579,14 @@ public class DataHelper {
 	//TEMPORARY DEBUG
 	protected void downAllAttendees() {
 		SharedPreferences settings = ctx.getSharedPreferences(PREFSNAME, 0);
-		ArrayList<String[]> a;
+		ArrayList<Contact> a;
 
 		//long since = settings.getLong(SINCE, 0);
 		//long unixTime = System.currentTimeMillis() / 1000L;
-		a = Net.downAllAttendees(0);
-
+		a = Net.downPublic();
 		//a = NetHelper.downAllAttendees();
 
-		SQLiteDatabase db;
+		/*SQLiteDatabase db;
 		ContentValues values;
 		for (String[] s : a) {
 
@@ -586,7 +606,7 @@ public class DataHelper {
 			} finally {
 				db.close();
 			}
-		}
+		}*/
 	}
 
 	
@@ -601,6 +621,15 @@ public class DataHelper {
 			i++;
 		}
 		return out;
+	}
+	
+	
+	// given string s - is it not null and length > 0?
+	private boolean check(String s){
+		if((s != null) && (s.length() > 1)){
+			return true;
+		}
+		return false;
 	}
 	
 }

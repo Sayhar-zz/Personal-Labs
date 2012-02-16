@@ -100,16 +100,14 @@ public class FilterAttendees extends ListActivity {
 		ctx = this;
 		filterText = (EditText) findViewById(R.id.search_line);
 		filterText.addTextChangedListener(filterTextWatcher);
-
+		
+		ProgressDialog dialog = ProgressDialog.show(this, "",
+				"Loading contacts", true, true);
+		
 		adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1, getStringArrayList());
 		setListAdapter(adapter);
-		ProgressDialog dialog = ProgressDialog.show(this, "",
-				"Loading contacts", true, true);
-		dialog.show();
-		while (adapter.isEmpty()) {
-			
-		}
+		
 		dialog.dismiss();
 
 		ListView lv = getListView();

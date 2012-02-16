@@ -13,7 +13,8 @@
 
     <application
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name" >
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.NoTitleBar" >
         
         <activity
             android:label="AddFriendLoc"
@@ -47,7 +48,8 @@
 		<activity
             android:label="ViewContacts"
             android:name="ViewContacts"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden"
+             />
 		<activity
             android:label="ShowContact"
             android:name="ShowContact"
