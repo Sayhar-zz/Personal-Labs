@@ -3,6 +3,8 @@ package com.saharmassachi.labs.newfellow;
 import static com.saharmassachi.labs.newfellow.Constants.CID;
 import static com.saharmassachi.labs.newfellow.Constants.FNAME;
 import static com.saharmassachi.labs.newfellow.Constants.LNAME;
+
+import java.util.HashMap;
 //import static com.saharmassachi.labs.newfellow.Constants.NAME;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -28,6 +30,7 @@ public class ViewContacts extends ListActivity {
 	private Intent nextPage;
 	private long[] ids;
 	Contact[] contacts;
+	private HashMap<String, Long> map;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +43,7 @@ public class ViewContacts extends ListActivity {
 		filterText.addTextChangedListener(filterTextWatcher);
 		adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1, getStringArrayList());
+		
 		nextPage = new Intent(this, ShowContact.class);
 
 		setListAdapter(adapter);
@@ -51,18 +55,19 @@ public class ViewContacts extends ListActivity {
 			dialog.show();
 		}
 		dialog.dismiss();
-
+		
+		
+		
 		ListView lv = getListView();
 		lv.setTextFilterEnabled(true);
 		lv.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				final String name = (String) ((TextView) view).getText();
-				int pos = parent.getPositionForView(view);
-				final String fname = contacts[pos].getfirst();
-				final String lname = contacts[pos].getlast();
+				final String fname = name.split(" ")[0];
+				final String lname = name.split(" ")[1];
 				nextPage.putExtra(FNAME, fname);
 				nextPage.putExtra(LNAME, lname);
-				nextPage.putExtra(CID, ids[pos]);
+				nextPage.putExtra(CID, map.get(name));
 				startActivity(nextPage);
 
 			}});
@@ -70,24 +75,21 @@ public class ViewContacts extends ListActivity {
 
 		private String[] getStringArrayList() {
 			// get all attendees
-
+			map = new HashMap<String, Long>();
 			contacts = helper.getBasicContacts();
 			String[] toReturn = new String[contacts.length];
-			ids = new long[contacts.length];
+			
 			for (int i = 0; i < contacts.length; i++) {
 				toReturn[i] = contacts[i].getName();
-				ids[i] = contacts[i].getCid();
+				map.put(toReturn[i], contacts[i].getCid());
 			}
 
-			// ids = s[0];
-
-			// ArrayList[] ss;
-			// ss[1] == attendee name
-			// ss[0] == attendee id;
-			//
+			
 			return toReturn;
 		}
-
+		
+		
+		
 		private TextWatcher filterTextWatcher = new TextWatcher() {
 
 			public void afterTextChanged(Editable s) {

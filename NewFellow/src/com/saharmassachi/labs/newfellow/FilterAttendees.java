@@ -1,6 +1,7 @@
 package com.saharmassachi.labs.newfellow;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import static com.saharmassachi.labs.newfellow.Constants.BID;
 import static com.saharmassachi.labs.newfellow.Constants.FNAME;
 import static com.saharmassachi.labs.newfellow.Constants.LNAME;
+import static com.saharmassachi.labs.newfellow.Constants.MANUAL;
 
 public class FilterAttendees extends ListActivity {
 	DataHelper helper;
@@ -29,7 +31,7 @@ public class FilterAttendees extends ListActivity {
 	int pos = 0;
 	Context ctx;
 	private Intent nextPage;
-	long[] ids;
+	private HashMap<String, Long> map;
 	Contact[] contacts;
 
 	@Override
@@ -43,14 +45,16 @@ public class FilterAttendees extends ListActivity {
 
 	private String[] getStringArrayList() {
 		// get all attendees
-
+		map = new HashMap<String, Long>();
 		contacts = helper.getAllBasicPublic(); 
 		String[] toReturn = new String[contacts.length];
-		ids = new long[contacts.length];
-		for (int i = 0; i < contacts.length; i++) {
+		
+		for(int i = 0; i < contacts.length; i++){
 			toReturn[i] = contacts[i].getName();
-			ids[i] = contacts[i].getID();
+			map.put(toReturn[i], contacts[i].getID());
+			//map will remember the associations
 		}
+		
 		return toReturn;
 	}
 
@@ -87,6 +91,7 @@ public class FilterAttendees extends ListActivity {
 		if(names.length == 2){ 
 			nextPage.putExtra(LNAME, names[1]);	
 		}
+		nextPage.putExtra(MANUAL, true);
 		startActivity(nextPage);
 	}
 
@@ -114,13 +119,13 @@ public class FilterAttendees extends ListActivity {
 		lv.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-
-				pos = parent.getPositionForView(view);
-				final String fname = contacts[pos].getfirst();
-				final String lname = contacts[pos].getlast();
+				TextView tview = (TextView) view;
+				String name = tview.getText().toString();
+				final String fname = name.split(" ")[0];
+				final String lname = name.split(" ")[1];
 				nextPage.putExtra(FNAME, fname);
 				nextPage.putExtra(LNAME, lname);
-				nextPage.putExtra(BID, ids[pos]);
+				nextPage.putExtra(BID, map.get(name));
 				startActivity(nextPage);
 			}
 		});

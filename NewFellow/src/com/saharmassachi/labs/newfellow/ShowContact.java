@@ -12,13 +12,18 @@ import java.util.List;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.method.KeyListener;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -63,6 +68,7 @@ public class ShowContact extends Activity {
 	private ArrayAdapter<String> adapter;
 	private int whichAddress;
 	private Geocoder geocoder;
+	private Context ctx;
 
 	private final int MAXRESULTS = 5;
 
@@ -76,7 +82,7 @@ public class ShowContact extends Activity {
 		lname = extras.getString(LNAME);
 		cid = extras.getLong(CID);
 		geocoder = new Geocoder(this);
-		;
+		ctx = this;
 		getValues();
 		loadViews();
 		setViews();
@@ -138,6 +144,7 @@ public class ShowContact extends Activity {
 		toShow = helper.getContact(cid);
 		phone = toShow.getPhone();
 		twitter = toShow.getTwitter();
+		email = toShow.getEmail();
 		base = toShow.getBase();
 		oldlat = toShow.getLat();
 		oldlong = toShow.getLong();
@@ -359,5 +366,48 @@ public class ShowContact extends Activity {
 		AlertDialog alert = builder.create();
 		alert.show();
 
+	}
+	
+	
+	private void delete(){
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage("Really delete this contact?").setCancelable(false)
+			.setNegativeButton("NO",new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+				}
+			}) 	
+			.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						helper.deleteContact(cid);
+						Intent intent;
+						intent = new Intent (ctx, ViewContacts.class);
+						startActivity(intent);
+					}
+				});
+		AlertDialog alert = builder.create();
+		alert.show();
+		
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.contactmenu, menu);
+	    return true;
+	    
+	    
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle item selection
+	    switch (item.getItemId()) {
+	        case R.id.delete:
+	            delete();
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
 	}
 }

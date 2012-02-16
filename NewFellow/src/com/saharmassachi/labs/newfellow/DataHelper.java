@@ -4,6 +4,7 @@ import static com.saharmassachi.labs.newfellow.Constants.PREFSNAME;
 import static com.saharmassachi.labs.newfellow.Constants.MYKEY;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 import static com.saharmassachi.labs.newfellow.Constants.BID;
@@ -77,6 +78,19 @@ public class DataHelper {
 	}
 
 	
+	public void deleteContact(long cid){
+		
+		SQLiteDatabase db = fdb.getWritableDatabase();
+		try{
+			db.delete(PRIVATE_TABLE, CID  + " = " + cid, null);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		finally{
+			db.close();
+		}
+	}
 	
 	// putPrivate = save a new contact, and send it to the server
 	public long putPrivate(Contact c) {
@@ -159,8 +173,13 @@ public class DataHelper {
 	// getContact = get contact information (merge of their public info & my private info)
 	public Contact getContact(long contactid){
 		Contact priv = getOnePrivate(contactid);
-		Contact pub = getOnePublic(priv.getID());
-		return merge(priv, pub);
+		if(priv.getID() > 0) {
+			Contact pub = getOnePublic(priv.getID()); 
+			return merge(priv, pub);
+		}
+		else{
+			return priv;
+		}
 	
 		
 	}
@@ -184,10 +203,13 @@ public class DataHelper {
 		}
 		
 		//and now for contacts in privates that aren't in public
-		for (Contact c : privates.values()) {
-			    list.add(c);
+		//for (Contact c : privates.values()) {
+		//	list.add(c);
+		//}
+		
+		for (Contact c: getNoBadges()){
+			list.add(c);
 		}
-				
 		Contact[] toreturn = new Contact[list.size()];
 		list.toArray(toreturn);
 		return toreturn;
@@ -218,7 +240,7 @@ public class DataHelper {
 	
 	
 	
-	protected Contact[] search(String searchstring) {
+	protected ArrayList<Contact> search(String searchstring) {
 
 		ArrayList<Contact> a = new ArrayList<Contact>();
 		String sql = 
@@ -260,12 +282,8 @@ public class DataHelper {
 			cursor.close();
 			db.close();
 		
+			return a;
 			
-			Contact[] toreturn = new Contact[a.size()];
-			a.toArray(toreturn);
-			return toreturn;
-			
-		
 	}
 	
 	
@@ -274,12 +292,13 @@ public class DataHelper {
 
 	//return all entries in the privates table
 	//but just their name, lat, long, and badge id
+	//also we won't return things without badge ids (because there's a separate function to return just those)
 	private HashMap<String, Contact> getBasicPrivateMap(){
 		HashMap<String, Contact> map = new HashMap<String, Contact>();
 		String[] columns = { CID, BID, FNAME, LNAME, LAT, LONG };
 		SQLiteDatabase db = fdb.getReadableDatabase();
 		try{
-			Cursor c = db.query(PRIVATE_TABLE, columns, null, null, null,
+			Cursor c = db.query(PRIVATE_TABLE, columns, BID + ">" + -1, null, null,
 					null, null);
 
 			while (c.moveToNext()) {
@@ -447,6 +466,32 @@ public class DataHelper {
 		return cursorToContact(curse, PUBLIC_TABLE);
 	}
 	
+	private Contact[] getNoBadges(){
+		SQLiteDatabase db = fdb.getReadableDatabase();
+		//String[] selection = {String.valueOf(contactid)};
+		Contact[] toreturn = null;
+		try {
+
+			Cursor c = db.query(PRIVATE_TABLE, null, BID + "<" + 0, null, null,
+					null, null);
+			toreturn = new Contact[c.getCount()];
+			int i = 0;
+			while (c.moveToNext()) {
+				toreturn[i] = privateCursorToContact(c);
+				i++;
+			}
+			c.close();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		finally{
+			db.close();
+		}
+		return toreturn;
+	}
+	
 	private ContentValues contactToValues(Contact c){
 		ContentValues values = new ContentValues();
 		String b = c.getBase();
@@ -496,7 +541,7 @@ public class DataHelper {
 
 
 
-
+	
 
 
 

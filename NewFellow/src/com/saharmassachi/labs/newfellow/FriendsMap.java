@@ -197,11 +197,18 @@ public class FriendsMap extends MapActivity {
 		Contact[] plottables;
 		if (searchString.length() == 0){
 			plottables = datahelper.getBasicContacts();
-			overlayAdder(plottables, itemizedoverlay); //get rid of this when you uncomment the stuff below.
+			
 		}
 		else{
 			//TODO
-			plottables = datahelper.search(searchString);
+			String[] searches = searchString.split(" ");
+			ArrayList<Contact> plots = new ArrayList<Contact>();
+			for (String s : searches){
+				plots.addAll(datahelper.search(s));
+			}
+			plottables = new Contact[plots.size()];
+			plots.toArray(plottables);
+			
 		}
 		overlayAdder(plottables, itemizedoverlay);
 		

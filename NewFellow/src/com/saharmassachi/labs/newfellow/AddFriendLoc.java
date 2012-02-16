@@ -23,6 +23,7 @@ import android.widget.Toast;
 import static com.saharmassachi.labs.newfellow.Constants.BID;
 import static com.saharmassachi.labs.newfellow.Constants.FNAME;
 import static com.saharmassachi.labs.newfellow.Constants.LNAME;
+import static com.saharmassachi.labs.newfellow.Constants.MANUAL;
 
 public class AddFriendLoc extends Activity implements OnClickListener {
 	
@@ -80,25 +81,27 @@ public class AddFriendLoc extends Activity implements OnClickListener {
 		//try to preload things
 		try {
 			//TODO
-			Contact c = helper.getOnePublic(id);
-			oldp = c.getPhone();
-			oldb = c.getBase();
-			olde = c.getEmail();
-			oldt = c.getTwitter();
-			if(check(oldb)){
-				etaddress.setText(oldb);
+			if(id > 0){
+				Contact c = helper.getOnePublic(id);
+				oldp = c.getPhone();
+				oldb = c.getBase();
+				olde = c.getEmail();
+				oldt = c.getTwitter();
+				if(check(oldb)){
+					etaddress.setText(oldb);
+				}
+				if(check(oldp)){
+					etPhone.setText(oldp);
+				}
+				if(check(olde)){
+					etEmail.setText(olde);
+				}
+				if(check(oldt)){
+					etTweet.setText(oldt);
+				}
+				oldlat = c.getLat();
+				oldlong = c.getLong();
 			}
-			if(check(oldp)){
-				etPhone.setText(oldp);
-			}
-			if(check(olde)){
-				etEmail.setText(olde);
-			}
-			if(check(oldt)){
-				etTweet.setText(oldt);
-			}
-			oldlat = c.getLat();
-			oldlong = c.getLong();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -150,17 +153,18 @@ public class AddFriendLoc extends Activity implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.friendDbAdd:
 			
-			
 			newAddress = allAddresses.get(whichAddress);
 			newlat = (int) (newAddress.getLatitude() * 1E6);
 			newlong = (int) (newAddress.getLongitude() * 1E6);
 			
+			
 			Contact con = createContact();
 			
+			if(id < 0){
+				con.setBase(etaddress.getText().toString());
+			}
+			
 			long j = helper.putPrivate(con);
-			
-			
-			tv1.append("name:");
 			Contact tmp = helper.getContact(j);
 			
 			tv1.append(tmp.toString());
@@ -195,7 +199,9 @@ public class AddFriendLoc extends Activity implements OnClickListener {
 			contact.setLong(newlong);
 			contact.setBase(etaddress.getText().toString());
 		}
-			
+		if(id < 0){
+			contact.setID(-1);
+		}
 		return contact;
 		
 	}
@@ -233,7 +239,12 @@ public class AddFriendLoc extends Activity implements OnClickListener {
 		else{
 			lname = ".";
 		}
-		id = extras.getLong(BID);
+		if(extras.containsKey(MANUAL)){
+			id = -1; // to show that it's not set yet;
+		}
+		else{
+			id = extras.getLong(BID);
+		}
 		tvname.setText(fname + " " + lname);
 		
 		spincheck

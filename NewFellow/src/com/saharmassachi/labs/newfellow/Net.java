@@ -149,6 +149,7 @@ public class Net {
 	public static void uploadNewContacts(){
 		//TODO 
 		Log.e(TAG, "upload new contacts stub");
+		//remember to get the new badge numbers for those who don't have badges
 	}
 	
 	
