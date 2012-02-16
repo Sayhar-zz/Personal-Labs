@@ -37,7 +37,7 @@ public class FriendsMap extends MapActivity {
 	protected MapController controller;
 	int streetView;
 	boolean goToMyLocation;
-	private DBhelper datahelper;
+	private DataHelper datahelper;
 	private EditText etSearch;
 	//ZoomPanListener zpl;
 	//protected Handler handler = new Handler();
@@ -63,7 +63,7 @@ public class FriendsMap extends MapActivity {
 		streetView = 0;
 		center = new GeoPoint(-1,-1);
 		zoomLevel = map.getZoomLevel();
-		datahelper = new DBhelper(this);
+		datahelper = new DataHelper(this);
 		makeDownloadThread();
 		//check onResume for the place where we add more plots on the map.
 		mapOverlays.add(itemizedoverlay);
@@ -131,17 +131,19 @@ public class FriendsMap extends MapActivity {
 	
 	
 	
-	protected synchronized void overlayAdder(ArrayList<SimpleContact> toshow, ItemizedContactOverlay overlay){ 
+	protected synchronized void overlayAdder(Contact[] toshow, ItemizedContactOverlay overlay){ 
 		if (toshow == null) {return; }///THIS IS A PROBLEM AND SHOULD NEVER HAPPEN
 		
-		for(SimpleContact contact : toshow) {
+		for(Contact contact : toshow) {
 			
-			String locationString = contact.getAddress(); 
+			String locationString = contact.getBase(); 
 			int latitude = contact.getLat();
 			int longitude = contact.getLong();
 			GeoPoint point = new GeoPoint(latitude,longitude);
 			String S = (contact.getName());
-			long cid = contact.getCid();
+			long cid = contact.getCid(); 
+			//I was worried a while about some contacts not having a cid. But that's SILLY! 
+			//if you're on the map, then you must have a cid.
 			overlay.addToOverlay(new ContactOverlayItem(point, S, locationString, cid));
 		}
 	}
@@ -192,11 +194,13 @@ public class FriendsMap extends MapActivity {
 	public void mapSearch(View v){
 		mapClear();
 		String searchString = etSearch.getText().toString();
-		ArrayList<SimpleContact> plottables;
+		Contact[] plottables;
 		if (searchString.length() == 0){
-			plottables = datahelper.getAllSimpleContacts();
+			plottables = datahelper.getBasicContacts();
+			overlayAdder(plottables, itemizedoverlay); //get rid of this when you uncomment the stuff below.
 		}
 		else{
+			//TODO
 			plottables = datahelper.search(searchString);
 		}
 		overlayAdder(plottables, itemizedoverlay);
@@ -221,7 +225,7 @@ public class FriendsMap extends MapActivity {
 		Runnable r = new Runnable() {
 			@Override
 			public void run() {
-				datahelper.downAllAttendees();
+				//datahelper.downPublic();
 			}
 		};
 		new Thread(r).start();
@@ -245,16 +249,14 @@ public class FriendsMap extends MapActivity {
 		super.onResume();
 		
 		userLocationOverlay.enableMyLocation();
-//		zpl = new ZoomPanListener();
-//		zpl.execute(null);
 		
 		SharedPreferences settings = getSharedPreferences(PREFSNAME, 0);
 		if (!settings.contains(MYID)) {
-			Intent i = new Intent(this, Login.class);
-			startActivity(i);
+		//	Intent i = new Intent(this, Login.class);
+			//startActivity(i);
 		}
 		
-		ArrayList<SimpleContact> plottables = datahelper.getAllSimpleContacts();  
+		Contact[] plottables = datahelper.getBasicContacts();
 		overlayAdder(plottables, itemizedoverlay);
 		
 	}

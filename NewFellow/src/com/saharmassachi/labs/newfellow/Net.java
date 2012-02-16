@@ -19,13 +19,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
+
 //NetHelper is STATIC
 //NetHelper should usually be called through DBhelper
 
-public class NetHelper {
+public class Net {
 
 	public static final String appKey = "VM5ROYOT7FUHFXZ65D";
-
+	public static final String TAG = "NETHELPER";
+	
 	public static ArrayList<String[]> downAllAttendees(long since) {
 
 		//TODO = change downAllAttendees to use heroku.
@@ -37,7 +41,7 @@ public class NetHelper {
 			HttpGet request = new HttpGet();
 			String rootscampid = "2025659803";
 			String baseURL = "http://www.eventbrite.com/json/event_list_attendees?app_key="
-					+ appKey + "&id=" + rootscampid + "&count=100";
+					+ appKey + "&id=" + rootscampid + "&count=10";
 
 			request.setURI(new URI(baseURL));
 			page = connectionHelper(request);
@@ -126,12 +130,26 @@ public class NetHelper {
 		return page;
 	}
 
-	public static void uploadMyInfo(Contact c) {
-		//given contact c (me!), send it to the heroku server;
-		//TODO this
-		
+	public static void downPublic(){
+		//TODO 
+		Log.e(TAG, "DOWNPUBLIC stub");
 	}
-
+	
+	public static void downPrivate(){
+		//TODO 
+		Log.e(TAG, "DOWNPRIVATE stub");
+	}
+	
+	public static boolean login(String uid, Contact c){
+		//TODO 
+		Log.e(TAG, "login stub");
+		return true;
+	}
+	
+	public static void uploadNewContacts(){
+		//TODO 
+		Log.e(TAG, "upload new contacts stub");
+	}
 	
 	
 }

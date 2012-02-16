@@ -54,13 +54,14 @@ public class DBhelper {
 	private Context ctx;
 
 	public DBhelper(Context ctx) {
-		fdb = new FellowDB(ctx);
+		//fdb = new FellowDB(ctx);
 		this.ctx = ctx;
 		globalLock = new ReentrantReadWriteLock();
 		readLock = globalLock.readLock();
 		writeLock = globalLock.writeLock();
 	}
 
+	/*
 	protected long addAddress(Address a) {
 		long toreturn;
 		ContentValues values = addressToContentValues(a);
@@ -212,7 +213,7 @@ public class DBhelper {
 		
 		long since = settings.getLong(SINCE, 0);
 		long unixTime = System.currentTimeMillis() / 1000L;
-		a = NetHelper.downAllAttendees(since);
+		a = Net.downAllAttendees(since);
 		
 		//a = NetHelper.downAllAttendees();
 
@@ -576,7 +577,7 @@ public class DBhelper {
 
 	protected boolean uploadMyInfo(Contact c){
 		try{
-			NetHelper.uploadMyInfo(c);
+			//Net.uploadMyInfo(c);
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -585,5 +586,5 @@ public class DBhelper {
 		
 		return true;
 		
-	}
+	//}*/
 }

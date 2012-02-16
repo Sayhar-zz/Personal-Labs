@@ -18,12 +18,12 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import static com.saharmassachi.labs.newfellow.Constants.CID;
+import static com.saharmassachi.labs.newfellow.Constants.BID;
 import static com.saharmassachi.labs.newfellow.Constants.FNAME;
 import static com.saharmassachi.labs.newfellow.Constants.LNAME;
 
 public class FilterAttendees extends ListActivity {
-	DBhelper helper;
+	DataHelper helper;
 	private EditText filterText = null;
 	ArrayAdapter<String> adapter = null;
 	int pos = 0;
@@ -35,59 +35,22 @@ public class FilterAttendees extends ListActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		helper = new DBhelper(this);
+		helper = new DataHelper(this);
 		setContentView(R.layout.filterattendees);
-		ctx = this;
-		filterText = (EditText) findViewById(R.id.search_line);
-		filterText.addTextChangedListener(filterTextWatcher);
-
-		adapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, getStringArrayList());
-		setListAdapter(adapter);
-		ProgressDialog dialog = ProgressDialog.show(this, "",
-				"Loading contacts", true, true);
-		while (adapter.isEmpty()) {
-			dialog.show();
+		init();
+		
 		}
-		dialog.dismiss();
-
-		ListView lv = getListView();
-		lv.setTextFilterEnabled(true);
-		nextPage = new Intent(this, AddFriendLoc.class);
-
-		lv.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-
-				pos = parent.getPositionForView(view);
-				final String fname = contacts[pos].getfirst();
-				final String lname = contacts[pos].getlast();
-				nextPage.putExtra(FNAME, fname);
-				nextPage.putExtra(LNAME, lname);
-				nextPage.putExtra(CID, ids[pos]);
-				startActivity(nextPage);
-			}
-		});
-	}
 
 	private String[] getStringArrayList() {
 		// get all attendees
 
-		contacts = helper.getAllAttendees();
+		contacts = helper.getAllBasicPublic(); 
 		String[] toReturn = new String[contacts.length];
 		ids = new long[contacts.length];
 		for (int i = 0; i < contacts.length; i++) {
 			toReturn[i] = contacts[i].getName();
 			ids[i] = contacts[i].getID();
 		}
-
-		// ids = s[0];
-
-		// ArrayList[] ss;
-		// ss[1] == attendee name
-		// ss[0] == attendee id;
-		//
 		return toReturn;
 	}
 
@@ -127,4 +90,40 @@ public class FilterAttendees extends ListActivity {
 		startActivity(nextPage);
 	}
 
+	
+	private void init(){
+		ctx = this;
+		filterText = (EditText) findViewById(R.id.search_line);
+		filterText.addTextChangedListener(filterTextWatcher);
+
+		adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_list_item_1, getStringArrayList());
+		setListAdapter(adapter);
+		ProgressDialog dialog = ProgressDialog.show(this, "",
+				"Loading contacts", true, true);
+		dialog.show();
+		while (adapter.isEmpty()) {
+			
+		}
+		dialog.dismiss();
+
+		ListView lv = getListView();
+		lv.setTextFilterEnabled(true);
+		nextPage = new Intent(this, AddFriendLoc.class);
+
+		lv.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+
+				pos = parent.getPositionForView(view);
+				final String fname = contacts[pos].getfirst();
+				final String lname = contacts[pos].getlast();
+				nextPage.putExtra(FNAME, fname);
+				nextPage.putExtra(LNAME, lname);
+				nextPage.putExtra(BID, ids[pos]);
+				startActivity(nextPage);
+			}
+		});
+
+	}
 }

@@ -5,7 +5,7 @@ import com.google.android.maps.OverlayItem;
 
 public class ContactOverlayItem extends OverlayItem {
 
-	long contact;
+	long cid;
 	
 	public ContactOverlayItem(GeoPoint point, String title, String snippet) {
 		super(point, title, snippet);
@@ -14,12 +14,12 @@ public class ContactOverlayItem extends OverlayItem {
 	
 	public ContactOverlayItem(GeoPoint point, String title, String snippet, long cid) {
 		super(point, title, snippet);
-		contact = cid;
+		this.cid = cid;
 	
 	}
 	
 	public long getContact(){
-		return contact;
+		return cid;
 	}
 
 }

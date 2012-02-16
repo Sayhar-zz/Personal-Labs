@@ -17,7 +17,7 @@ import com.google.android.maps.OverlayItem;
 import static com.saharmassachi.labs.newfellow.Constants.EMAIL;
 
 public class ItemizedContactOverlay extends ItemizedOverlay<ContactOverlayItem> {
-	DBhelper helper;
+	DataHelper helper;
 	Context mContext;
 	private ArrayList<ContactOverlayItem> mOverlays;
 
@@ -32,7 +32,7 @@ public class ItemizedContactOverlay extends ItemizedOverlay<ContactOverlayItem> 
 		
 		mContext = context;
 		mOverlays = new ArrayList<ContactOverlayItem>();
-		helper = new DBhelper(context);
+		helper = new DataHelper(context);
 		populate();
 	}
 
@@ -70,7 +70,7 @@ public class ItemizedContactOverlay extends ItemizedOverlay<ContactOverlayItem> 
 	
 		//Returns NAME PHONE EMAIL TWITTER FBID into cid 
 		 
-		final Contact c = helper.getContactInfo(cid);
+		final Contact c = helper.getContact(cid);
 		
 		Dialog dialog = new Dialog(mContext);
 

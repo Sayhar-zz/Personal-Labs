@@ -4,13 +4,14 @@ public class Contact {
 	long badgeID;
 	String first;
 	String last;
-	String twitter;
-	String fbid;
-	String phone;
-	String email;
-	String basename;
-	int lat;
-	int lng;
+	String twitter = null;
+	String fbid = null;
+	String phone = null;
+	String email = null;
+	String basename = null;
+	int lat = 0;
+	int lng = 0;
+	long cid;
 	
 	public Contact(){}
 	
@@ -48,6 +49,9 @@ public class Contact {
 		return last;
 	}
 	
+	public String getFbid(){
+		return fbid;
+	}
 	public String getName(){
 		return first + " " + last;
 	}
@@ -100,5 +104,24 @@ public class Contact {
 		twitter = t;
 	}
 	
+	public String toString(){
+		String s = "[ ";
+		s += badgeID + ", ";
+		s += first + " " + last + ", ";
+		s += email + ", ";
+		s += phone + ", ";
+		s += twitter + ", ";
+		s += basename + ", ";
+		s += lat  + ", ";
+		s += lng  + " ]";
+		return s;
+	}
 	
+	public void setCid(long i){
+		cid = i;
+	}
+	
+	public long getCid(){
+		return cid;
+	}
 }

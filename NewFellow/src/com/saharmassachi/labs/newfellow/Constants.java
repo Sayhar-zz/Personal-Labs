@@ -41,5 +41,8 @@ public interface Constants extends BaseColumns {
 	public static final String SINCE = "since";
 	
 	public static final String BID = "badgeid";
+	public static final String UPLOADED = "uploaded";
+	public static final String PRIVATE_TABLE = "contacts";
+	public static final String PUBLIC_TABLE = "public";
 }
 

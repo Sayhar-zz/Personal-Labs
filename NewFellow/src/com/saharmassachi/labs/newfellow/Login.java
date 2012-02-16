@@ -36,7 +36,7 @@ public class Login extends Activity {
 	// TODO Address a;
 	String fbid;
 	String twitterid;
-	DBhelper h;
+	DataHelper h;
 	UUID key;
 	private EditText etBadge;
 	private EditText etName;
@@ -66,7 +66,7 @@ public class Login extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login_badge);
-		h = new DBhelper(this);
+		h = new DataHelper(this);
 		etBadge = (EditText) findViewById(R.id.etBadgeID);
 		geocoder = new Geocoder(this);
 	}

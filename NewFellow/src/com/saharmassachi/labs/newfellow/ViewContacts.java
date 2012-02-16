@@ -22,7 +22,7 @@ import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class ViewContacts extends ListActivity {
-	private DBhelper helper;
+	private DataHelper helper;
 	private EditText filterText = null;
 	private ArrayAdapter<String> adapter = null;
 	private Intent nextPage;
@@ -33,7 +33,7 @@ public class ViewContacts extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		helper = new DBhelper(this);
+		helper = new DataHelper(this);
 		setContentView(R.layout.viewcontacts);
 
 		filterText = (EditText) findViewById(R.id.search_line);
@@ -71,12 +71,12 @@ public class ViewContacts extends ListActivity {
 		private String[] getStringArrayList() {
 			// get all attendees
 
-			contacts = helper.getAllFullContacts();
+			contacts = helper.getBasicContacts();
 			String[] toReturn = new String[contacts.length];
 			ids = new long[contacts.length];
 			for (int i = 0; i < contacts.length; i++) {
 				toReturn[i] = contacts[i].getName();
-				ids[i] = contacts[i].getID();
+				ids[i] = contacts[i].getCid();
 			}
 
 			// ids = s[0];
