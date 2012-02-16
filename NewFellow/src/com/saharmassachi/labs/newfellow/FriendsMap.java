@@ -60,7 +60,6 @@ public class FriendsMap extends MapActivity {
 		center = new GeoPoint(-1,-1);
 		zoomLevel = map.getZoomLevel();
 		datahelper = new DataHelper(this);
-		makeDownloadThread();
 		mapOverlays.add(itemizedoverlay);
 	}
 	
@@ -188,19 +187,6 @@ public class FriendsMap extends MapActivity {
 	
 	
 	
-	private void makeDownloadThread() {
-		// TODO in the future this will not call h.getAllAttendees but a different method.
-		datahelper.downPublic();
-		//Runnable r = new Runnable() {
-		//	@Override
-		//	public void run() {
-		//		datahelper.downPublic();
-		//	}
-		//};
-		//new Thread(r).start();
-	}
-	
-	
 	
 	//Disables MyLocation
 	@Override
@@ -219,14 +205,7 @@ public class FriendsMap extends MapActivity {
 		
 		userLocationOverlay.enableMyLocation();
 		
-		SharedPreferences settings = getSharedPreferences(PREFSNAME, 0);
-		if (!settings.contains(MYID)) {
-		//	Intent i = new Intent(this, Login.class);
-			//startActivity(i);
-		}
 		
-		Contact[] plottables = datahelper.getBasicContacts();
-		overlayAdder(plottables, itemizedoverlay);
 		
 	}
 

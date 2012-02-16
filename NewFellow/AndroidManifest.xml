@@ -27,6 +27,16 @@
             android:label="AddName"
             android:name="AddName" />
         <activity
+            android:label="Splash"
+            android:name="Splash" >
+             <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            
+            </activity>
+        <activity
             android:label="FilterAttendees"
             android:name="FilterAttendees" 
             android:windowSoftInputMode="stateHidden"/>
@@ -34,12 +44,8 @@
             android:label="FriendsMap"
             android:name="FriendsMap"
             android:theme="@android:style/Theme.NoTitleBar"
-            android:screenOrientation="portrait"> 
-            <intent-filter >
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter></activity>
+            android:screenOrientation="portrait" /> 
+           
             
         <activity
             android:label="Login"
