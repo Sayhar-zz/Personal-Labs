@@ -83,7 +83,18 @@ public class FilterAttendees extends ListActivity {
 	public void manualAdd(View v) {
 		
 		String name = filterText.getText().toString().trim();
-		
+		try{
+			Long code = Long.parseLong(name);
+			//if the name is parseable as a long (aka if it is a number) then it is a badgeid
+			//do that instead.
+			nextPage.removeExtra(BID);
+			nextPage.putExtra(BID, code);
+			startActivity(nextPage);
+			return;
+		}
+		catch(Exception e){
+			
+		}
 		if(name.length() == 0){ return;} //button is useless when there is nothing written 
 		
 		String[] names = name.split(" ", 2);

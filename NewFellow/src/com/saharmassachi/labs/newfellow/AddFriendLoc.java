@@ -89,6 +89,9 @@ public class AddFriendLoc extends Activity implements OnClickListener {
 		try {
 			if(id > 0){
 				Contact c = helper.getOnePublic(id);
+				fname = c.getfirst();
+				lname = c.getlast();
+				tvname.setText(fname + " " + lname);
 				oldp = c.getPhone();
 				oldb = c.getBase();
 				olde = c.getEmail();
