@@ -37,7 +37,6 @@ public class Login extends Activity {
 
 	private static final String TAG = "login";
 	long badgeID;
-	// TODO Address a;
 	String fbid;
 	String twitterid;
 	DataHelper h;
@@ -46,9 +45,6 @@ public class Login extends Activity {
 	private EditText etName;
 
 	private EditText[] ets;
-	private KeyListener[] listeners;
-	private InputFilter[][] filters;
-	private TextView topName;
 	private Spinner spinner;
 	private EditText etaddress;
 	private String fname;
@@ -153,7 +149,7 @@ public class Login extends Activity {
 
 	private void goLoginView(){
 		ets = new EditText[numRows];
-		topName = (TextView) findViewById(R.id.topName);
+
 		etaddress = (EditText) findViewById(R.id.etaddress);
 		ets[0] = (EditText) findViewById(R.id.TextView1b);
 		ets[1] = (EditText) findViewById(R.id.TextView2b);
@@ -178,7 +174,6 @@ public class Login extends Activity {
 
 
 	private boolean uploadMyInfo() {
-		// TODO in the future this will not call h.getAllAttendees but a different method.
 		String[] newnames = ets[0].getText().toString().split(" ", 2);
 		if((newnames == null) || (newnames[1] == null)){
 			Toast.makeText(this, "Please use a firstname and lastname", Toast.LENGTH_SHORT).show();
@@ -210,7 +205,7 @@ public class Login extends Activity {
 		e.putString(MYKEY, key.toString());
 		e.commit();
 
-		//TODO fix
+		
 		final Contact me = new Contact(badgeID, fname, lname);
 		if(check(email)){
 			me.setEmail(email);
@@ -243,6 +238,7 @@ public class Login extends Activity {
 				return true;
 			}
 			else{
+				//What do we do if they don't enter a badge number?
 				//TODO
 				return true;
 			}

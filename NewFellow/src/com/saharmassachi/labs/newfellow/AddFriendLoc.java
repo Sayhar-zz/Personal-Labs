@@ -82,7 +82,6 @@ public class AddFriendLoc extends Activity implements OnClickListener {
 		// name = name.substring(1, name.length()-1);
 		//try to preload things
 		try {
-			//TODO
 			if(id > 0){
 				Contact c = helper.getOnePublic(id);
 				oldp = c.getPhone();
@@ -145,7 +144,6 @@ public class AddFriendLoc extends Activity implements OnClickListener {
 			}
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

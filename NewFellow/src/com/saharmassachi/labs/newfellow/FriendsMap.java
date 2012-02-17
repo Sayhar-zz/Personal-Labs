@@ -11,6 +11,9 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -19,6 +22,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
@@ -89,11 +95,6 @@ public class FriendsMap extends MapActivity {
 		}
 		
 		
-		
-		//SharedPreferences settings = getSharedPreferences(PREFSNAME, 0);
-		Editor e = settings.edit();
-		e.remove(MYKEY); //this is so we go through intro every time. //TEMP //TODO fix later
-		e.commit();
 	}
 	
 	@Override
@@ -194,7 +195,6 @@ public class FriendsMap extends MapActivity {
 			
 		}
 		else{
-			//TODO
 			String[] searches = searchString.split(" ");
 			ArrayList<Contact> plots = new ArrayList<Contact>();
 			for (String s : searches){
@@ -259,4 +259,48 @@ public class FriendsMap extends MapActivity {
 		i.setData(Uri.parse(url));
 		startActivity(i);
 	}
+	
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.mapmenu, menu);
+	    return true;
+	    
+	    
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		SharedPreferences settings = getSharedPreferences(PREFSNAME, 0);
+		
+		// Handle item selection
+	    switch (item.getItemId()) {
+	        case R.id.relogin:
+	        	Editor e = settings.edit();
+	        	e.clear();
+	        	e.commit();
+	            Intent i = new Intent(this, Login.class);
+	            startActivity(i);
+	            return true;
+	        case R.id.getbadge:
+	        	 AlertDialog alertDialog = new AlertDialog.Builder(this).create();  
+	        	    alertDialog.setTitle("My Badge Number:");
+	        	    String badge = settings.getString(MYID, null);
+	        	    if(badge == null){
+	        	    	alertDialog.setMessage("I have none. Awkward. Email sahar@innermostlabs.com and ask for help.");	
+	        	    }
+	        	    else{
+	        	    	alertDialog.setMessage(badge);
+	        	    }
+	        	    alertDialog.setButton("OK", new DialogInterface.OnClickListener() {  
+	        	      public void onClick(DialogInterface dialog, int which) {  
+	        	        return;  
+	        	    } });
+	        	    alertDialog.show();
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
+	
 }

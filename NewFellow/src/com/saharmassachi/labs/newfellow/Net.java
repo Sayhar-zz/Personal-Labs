@@ -41,24 +41,20 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
-
 //NetHelper is STATIC
 //NetHelper should only be called through DBhelper
 
-public class Net {	
+public class Net {
 	public static final String appKey = "VM5ROYOT7FUHFXZ65D";
 	public static final String TAG = "NETHELPER";
-	private static final String baseURL = "http://rootscamp.herokuapp.com"; 
-	
-	
-	
-	public static ArrayList<Contact> downPublic(){
-		//TODO 
+	private static final String baseURL = "http://rootscamp.herokuapp.com";
+
+	public static ArrayList<Contact> downPublic() {
 		HttpGet request = new HttpGet();
 		ArrayList<Contact> a = null;
 		String page = "";
 		try {
-			request.setURI( new URI(baseURL + "/users.json"));
+			request.setURI(new URI(baseURL + "/users.json"));
 			page = connectionHelper(request);
 			a = newParse(page);
 		} catch (URISyntaxException e) {
@@ -66,80 +62,43 @@ public class Net {
 		}
 		Log.e(TAG, "DOWNPUBLIC stub");
 		return a;
-		
+
 	}
-	
-	
-	
-	public static boolean login(String key, Contact c){
+
+	public static void downPrivate() {
+		// TODO
+		Log.e(TAG, "DOWNPRIVATE stub");
+	}
+
+	public static boolean login(String key, Contact c) {
 		HttpPut request = new HttpPut();
 		long badge = c.getID();
 
 		try {
-			
+
 			request.setURI(new URI(baseURL + "/users/" + badge + ".json"));
 			request.addHeader("Content-Type", "application/json");
 			request.addHeader("Accept", "application/json");
 			JSONObject o = new JSONObject();
-			JSONObject k = new JSONObject();
-			
-			String fname = c.getfirst();
-			String lname = c.getlast();
-			String e = c.getEmail();
-			String t = c.getTwitter();
-			String p = c.getPhone();
-			String fb = c.getFbid();
-			String loc = c.getBase();
-			
-			
+			JSONObject k = contactToJSON(c);
 			k.put("api_key", key);
-			if(check(fname)){
-				k.put(FNAME, fname);
-			}
-			if(check(lname)){
-				k.put(LNAME, lname);
-			}
-			if(check(e)){
-				k.put(EMAIL, e);
-			}
-			if(check(t)){
-				k.put(TWITTER, t);
-			}
-			if(check(p)){
-				k.put(PHONE, p);
-			}
-			if(check(fb)){
-				k.put(FBID, fb);
-			}
-			if(check(loc)){
-				k.put(RAWLOC, loc);
-			}
-			try{
-				k.put(LAT, c.getLat());
-				k.put(LONG, c.getLong());
-			}
-			catch(Exception ex){
-				ex.printStackTrace();
-			}
+
 			o.put("user", k);
-			
-			
+
 			StringEntity se = new StringEntity(o.toString());
 			request.setEntity(se);
 			HttpClient client = new DefaultHttpClient();
 			HttpResponse response = client.execute(request);
-			
+
 			return true;
-		}
-		catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		
+
 		return false;
 	}
-	
-	public static boolean register(String badgeid, String key){
+
+	public static boolean register(String badgeid, String key) {
 		HttpPut request = new HttpPut();
 
 		String page = "";
@@ -171,26 +130,142 @@ public class Net {
 
 		return false;
 	}
-	
-	public static void uploadNewContacts(){
-		//TODO 
+
+	public static boolean uploadNewContact(Contact con, String myid) {
+		String theirid = String.valueOf(con.getID());
+		if (check(theirid)) {
+			if (postNewContact(theirid, myid)) {
+				return putNewContact(con, myid);
+				//this will always return false. I don't know what id is of the row of the contact I want to edit.
+				//TODO fix this.
+			}
+			return false;
+		}
+
+		// if they don't have a badge id (AKA if it's a manual add):
+		else {
+			String fname = con.getfirst();
+			String lname = con.getlast();
+			if (postNewContact(fname, lname, myid)) {
+				return putNewContact(con, myid);
+			}
+			return false;
+		}
+	}
+
+	private static boolean postNewContact(String fname, String lname,
+			String myid) {
+		HttpPost request = new HttpPost();
+		try {
+			request.setURI(new URI(baseURL + "/users/" + myid
+					+ "/private_contacts.json"));
+			request.addHeader("Content-Type", "application/json");
+			request.addHeader("Accept", "application/json");
+
+			JSONObject outer = new JSONObject();
+			JSONObject i = new JSONObject();
+			i.put("first_name", fname); // These two lines are the only change.
+			i.put("last_name", lname); //
+			outer.put("private_contact", i);
+
+			StringEntity se = new StringEntity(outer.toString());
+			request.setEntity(se);
+			HttpClient client = new DefaultHttpClient();
+			try {
+				HttpResponse response = client.execute(request);
+				response.toString();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			return true;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return false;
+
+	}
+
+	private static boolean postNewContact(String theirid, String myid) {
+		HttpPost request = new HttpPost();
+		try {
+			request.setURI(new URI(baseURL + "/users/" + myid
+					+ "/private_contacts.json"));
+			request.addHeader("Content-Type", "application/json");
+			request.addHeader("Accept", "application/json");
+
+			JSONObject outer = new JSONObject();
+			JSONObject i = new JSONObject();
+			i.put("user_id", theirid);
+			outer.put("private_contact", i);
+
+			StringEntity se = new StringEntity(outer.toString());
+			request.setEntity(se);
+			HttpClient client = new DefaultHttpClient();
+			try {
+				HttpResponse response = client.execute(request);
+				Log.d(TAG, response.toString());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			return true;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return false;
+
+	}
+
+	private static boolean putNewContact(Contact con, String myid) {
 		Log.e(TAG, "upload new contacts stub");
-		//remember to get the new badge numbers for those who don't have badges
+		HttpPut request = new HttpPut();
+		try {
+			request.setURI(new URI(baseURL + "/users/" + myid
+					+ "/private_contacts/"+ 9999 +".json")); //that numbe is WRONG WRONG WRONG. 
+			//we should be inserting into the row of the id we want to change - but how can we find that number?
+			request.addHeader("Content-Type", "application/json");
+			request.addHeader("Accept", "application/json");
+
+			JSONObject outer = new JSONObject();
+			JSONObject i = contactToJSON(con);
+
+			outer.put("private_contact", i);
+
+			StringEntity se = new StringEntity(outer.toString());
+			request.setEntity(se);
+			HttpClient client = new DefaultHttpClient();
+			try {
+				HttpResponse response = client.execute(request);
+				response.toString();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			return true;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		// TODO remember to get the new badge numbers for those who don't have
+		// badges
+
+		return false;
+
 	}
-	
-	public static void downPrivate(){
-		//TODO 
-		Log.e(TAG, "DOWNPRIVATE stub");
-	}
-	
-	
-	private static String connectionHelper(HttpRequestBase request){
+
+	private static String connectionHelper(HttpRequestBase request) {
 		String toreturn = "";
 		BufferedReader in = null;
 		HttpClient client = new DefaultHttpClient();
-		try{
+		try {
 			HttpResponse response = client.execute(request);
-			in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+			in = new BufferedReader(new InputStreamReader(response.getEntity()
+					.getContent()));
 			StringBuffer sb = new StringBuffer("");
 			String line = "";
 			String NL = System.getProperty("line.separator");
@@ -199,25 +274,25 @@ public class Net {
 			}
 			in.close();
 			toreturn = sb.toString();
-			
-		}
-		catch (Exception e){
+
+		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		finally {
+		} finally {
 			if (in != null) {
 				try {
 					in.close();
 				} catch (IOException e) {
 					e.printStackTrace();
-				}}}
+				}
+			}
+		}
 		return toreturn;
 	}
-	
-	private static ArrayList<Contact> newParse(String in){
+
+	private static ArrayList<Contact> newParse(String in) {
 		ArrayList<Contact> a = new ArrayList<Contact>();
 		try {
-			JSONArray jarray = new JSONArray(in); 
+			JSONArray jarray = new JSONArray(in);
 			for (int i = 0; i < jarray.length(); i++) {
 				// so each o is an attendee
 				JSONObject o = jarray.getJSONObject(i);
@@ -229,61 +304,6 @@ public class Net {
 			e.printStackTrace();
 		}
 		return a;
-	}
-
-	private static Contact jsonToContact(JSONObject o){
-		String fname = null, lname = null;
-		long bid = -1; //they're all -1 because yale forgot to include badge_id
-		try {
-			fname = o.getString(FNAME);
-			lname = o.getString(LNAME);	
-			
-		} catch (JSONException e1) {
-			e1.printStackTrace();
-		}
-		Contact c = new Contact(-1, fname, lname);
-		
-		try {
-			String t = o.getString(TWITTER);
-			String p = o.getString(PHONE);
-			String e = o.getString(EMAIL);
-			String f = o.getString(FBID);
-			String loc = o.getString(RAWLOC);
-			
-			if(check(t)){
-				c.setTwitter(t);
-			}
-			if(check(p)){
-				c.setPhone(p);
-			}
-			if(check(e)){
-				c.setEmail(e);
-			}
-			if(check(f)){
-				c.setFbid(f);
-			}
-			if(check(loc)){
-				c.setBase(loc);
-			}
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try{
-			//IF there is no lat/long, this will return an execption, but
-			//this exception will be handled by the catch right underneath so no harm no foul.
-			//don't put anything after c.setLong and before the catch.
-			c.setLat(o.getInt(LAT));
-			c.setLong(o.getInt(LONG));
-		}
-		catch(Exception e){
-			Log.d(TAG, "Lat/Long are null");
-		}
-		
-		return c;
-		
-		
-	
 	}
 
 	private static boolean checkLogin(String uid, String key) {
@@ -302,22 +322,125 @@ public class Net {
 			String apk = p.getString("api_key");
 			String bid = p.getString("badge_id");
 
-			if (apk.equalsIgnoreCase(key)) 
-				//	&& bid.equalsIgnoreCase(uid)) //TODO fix this once the server supports it. 
+			if (apk.equalsIgnoreCase(key))
+				// && bid.equalsIgnoreCase(uid)) //TODO fix this once the server
+				// supports it.
 			{
 				return true;
 			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		return false;
 	}
-	
+
+	private static Contact jsonToContact(JSONObject o) {
+		String fname = null, lname = null;
+		long bid = -1; // they're all -1 because yale forgot to include badge_id
+		try {
+			fname = o.getString(FNAME);
+			lname = o.getString(LNAME);
+
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+		Contact c = new Contact(-1, fname, lname);
+
+		try {
+			String t = o.getString(TWITTER);
+			String p = o.getString(PHONE);
+			String e = o.getString(EMAIL);
+			String f = o.getString(FBID);
+			String loc = o.getString(RAWLOC);
+
+			if (check(t)) {
+				c.setTwitter(t);
+			}
+			if (check(p)) {
+				c.setPhone(p);
+			}
+			if (check(e)) {
+				c.setEmail(e);
+			}
+			if (check(f)) {
+				c.setFbid(f);
+			}
+			if (check(loc)) {
+				c.setBase(loc);
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		try {
+			// IF there is no lat/long, this will return an execption, but
+			// this exception will be handled by the catch right underneath so
+			// no harm no foul.
+			// don't put anything after c.setLong and before the catch.
+			c.setLat(o.getInt(LAT));
+			c.setLong(o.getInt(LONG));
+		} catch (Exception e) {
+			Log.d(TAG, "Lat/Long are null");
+		}
+
+		return c;
+
+	}
+
+	private static JSONObject contactToJSON(Contact c) {
+
+		JSONObject k = new JSONObject();
+
+		String fname = c.getfirst();
+		String lname = c.getlast();
+		String e = c.getEmail();
+		String t = c.getTwitter();
+		String p = c.getPhone();
+		String fb = c.getFbid();
+		String loc = c.getBase();
+
+		try {
+			if (check(fname)) {
+				k.put(FNAME, fname);
+			}
+			if (check(lname)) {
+				k.put(LNAME, lname);
+			}
+			if (check(e)) {
+				k.put(EMAIL, e);
+			}
+			if (check(t)) {
+				k.put(TWITTER, t);
+			}
+			if (check(p)) {
+				k.put(PHONE, p);
+			}
+			if (check(fb)) {
+				k.put(FBID, fb);
+			}
+			if (check(loc)) {
+				k.put(RAWLOC, loc);
+			}
+			try {
+				k.put(LAT, c.getLat());
+				k.put(LONG, c.getLong());
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		} catch (Exception exe) {
+			exe.printStackTrace();
+		}
+
+		return k;
+
+	}
+
 	// given string s - is it not null and length > 0?
-	private static boolean check(String s){
-		if((s != null) && (s.length() > 1) && (s.trim() != "null")){
+	private static boolean check(String s) {
+		if (
+				(s != null) 
+				&& (s.length() > 0) 
+				&& (s.trim() != "null")) {
 			return true;
 		}
 		return false;

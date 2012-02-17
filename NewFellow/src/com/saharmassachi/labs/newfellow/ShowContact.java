@@ -139,8 +139,6 @@ public class ShowContact extends Activity {
 	}
 
 	private void getValues() {
-		// call the db to get the info on this person and preload the db with it
-		// TODO
 		toShow = helper.getContact(cid);
 		phone = toShow.getPhone();
 		twitter = toShow.getTwitter();
@@ -151,7 +149,6 @@ public class ShowContact extends Activity {
 	}
 
 	private void setViews() {
-		// TODO
 		savebutton.setVisibility(View.INVISIBLE);
 		topName.setText(fname + " " + lname);
 		tvs[0].setText("Name:");
@@ -287,10 +284,7 @@ public class ShowContact extends Activity {
 				&& newemail.equalsIgnoreCase(email) 
 				&& (oldlat == newlat) 
 				&& (oldlong == newlong))) {
-			// delete old value in the table
-			// TODO
-			// add new value
-			// helper.delContact(toShow);
+		
 
 			Address a = allAddresses.get(whichAddress);
 

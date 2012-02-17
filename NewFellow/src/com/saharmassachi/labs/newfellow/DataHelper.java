@@ -22,6 +22,7 @@ import static com.saharmassachi.labs.newfellow.Constants.LAT;
 import static com.saharmassachi.labs.newfellow.Constants.LONG;
 import static com.saharmassachi.labs.newfellow.Constants.RAWLOC;
 import static com.saharmassachi.labs.newfellow.Constants.UPLOADED;
+import static com.saharmassachi.labs.newfellow.Constants.MYID;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -85,15 +86,15 @@ public class DataHelper {
 	}
 
 	
-	public void downPrivate() {
+	public synchronized void downPrivate() {
 		Net.downPrivate();
 	}
 	
-	public boolean register(long badge, UUID id){
+	public synchronized boolean register(long badge, UUID id){
 		return Net.register(String.valueOf(badge), id.toString());
 	}
 
-	public boolean login(Contact c) {
+	public synchronized boolean login(Contact c) {
 		SharedPreferences settings = ctx.getSharedPreferences(PREFSNAME, 0);
 		String uid = settings.getString(MYKEY, "null");
 		if (uid.equalsIgnoreCase("null")) {
@@ -137,13 +138,30 @@ public class DataHelper {
 			db.close();
 		}
 
-		Net.uploadNewContacts();
+		
+		//todo
+		SharedPreferences settings = ctx.getSharedPreferences(PREFSNAME, 0);
+		final String myid = settings.getString(MYID, "-1");
+		
+		Runnable r = new Runnable() {
+			@Override
+			public void run() {
+				ArrayList<Contact> up = getContactsToUpload();
+				for(Contact con : up){
+					if(Net.uploadNewContact(con, myid)){
+						markUploaded(con.getCid(), con);
+					}
+				}
+			}};
+		new Thread(r).start();
+		
+		
 
 		return toreturn;
 	}
 
 	
-	public Contact[] getAllBasicPublic() {
+	public synchronized Contact[] getAllBasicPublic() {
 		Contact[] toReturn = new Contact[0];
 		String[] columns = { BID, FNAME, LNAME, LAT, LONG };
 		SQLiteDatabase db = fdb.getReadableDatabase();
@@ -174,7 +192,7 @@ public class DataHelper {
 	}
 	
 
-	public Contact getOnePublic(long badgeid){
+	public synchronized Contact getOnePublic(long badgeid){
 		Contact toreturn = null; 
 		SQLiteDatabase db = fdb.getReadableDatabase();
 		String[] selection = {String.valueOf(badgeid)};
@@ -197,7 +215,7 @@ public class DataHelper {
 	}
 	
 	// getContact = get contact information (merge of their public info & my private info)
-	public Contact getContact(long contactid){
+	public synchronized Contact getContact(long contactid){
 		Contact priv = getOnePrivate(contactid);
 		if(priv.getID() > 0) {
 			Contact pub = getOnePublic(priv.getID()); 
@@ -214,7 +232,7 @@ public class DataHelper {
 	//This uses java where SQL would be faster. If there's time, redo this with a sql join instead
 	//for those searching for these keywords: dirty hack todo fixit later
 	// getContacts = get all my contacts (merge of public info and my private
-	public Contact[] getBasicContacts(){
+	public synchronized Contact[] getBasicContacts(){
 		Contact[] publics = this.getAllBasicPublic();
 		HashMap<String, Contact> privates = getBasicPrivateMap();
 		ArrayList<Contact> list = new ArrayList<Contact>();
@@ -233,6 +251,7 @@ public class DataHelper {
 		//	list.add(c);
 		//}
 		
+		//nullpointer exception?
 		for (Contact c: getNoBadges()){
 			list.add(c);
 		}
@@ -312,7 +331,45 @@ public class DataHelper {
 			
 	}
 	
+	private synchronized void markUploaded(long cid, Contact contact){
+		ContentValues values = contactToValues(contact);
+		values.remove(UPLOADED);
+		values.put(UPLOADED, 1);
+		values.put(CID, cid);
+		
+		Contact toreturn = null;
+		SQLiteDatabase db = fdb.getWritableDatabase();
+		try {
+			long r = db.replace(PRIVATE_TABLE, null, values);
+		}
+		finally{
+			db.close();
+		}
+		
+	}
 	
+	private ArrayList<Contact> getContactsToUpload(){
+		ArrayList<Contact> toreturn = new ArrayList<Contact>();
+		
+		SQLiteDatabase db = fdb.getReadableDatabase();
+		try {
+
+			Cursor c = db.query(PRIVATE_TABLE, null, UPLOADED+"<0", null, null, null, null);
+			//Can we check this?
+			while(c.moveToNext()){
+				toreturn.add(privateCursorToContact(c));
+			}
+			
+			c.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			db.close();
+		}
+		return toreturn;
+		
+
+	}
 	
 	
 
@@ -519,8 +576,9 @@ public class DataHelper {
 	}
 	
 	private ContentValues contactToValues(Contact c){
-		//this assumes that there is a badge ID.
+		//this sets badge ID if it exists
 		//This also sets UPLOADED to -1;
+		//it does not set cid
 		//fix both by removing those keys if these assumptions are not true.
 		ContentValues values = new ContentValues();
 		String b = c.getBase();
@@ -551,14 +609,17 @@ public class DataHelper {
 		if (check(t)) {
 			values.put(TWITTER, t);
 		}
-		// we don't need to check these, because every contact needs a lat/long
+		
 		if(badge > -1){
 			values.put(BID, badge);
 			Log.e(TAG, "No badge id. This is probably an error");
 		}
 		
-		values.put(LAT, lat);
-		values.put(LONG, lng);
+		try{
+			values.put(LAT, lat);
+			values.put(LONG, lng);
+		}
+		catch(Exception ex){}
 		values.put(UPLOADED, -1); // no booleans in SQLite. This means that this
 		// contact hasn't been uploaded.
 		return values;
@@ -631,7 +692,7 @@ public class DataHelper {
 	
 	// given string s - is it not null and length > 0?
 	private boolean check(String s){
-		if((s != null) && (s.length() > 1)){
+		if((s != null) && (s.length() > 0)){
 			return true;
 		}
 		return false;
