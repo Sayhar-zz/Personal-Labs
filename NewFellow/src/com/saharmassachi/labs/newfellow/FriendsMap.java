@@ -254,7 +254,7 @@ public class FriendsMap extends MapActivity {
 	}
 	
 	public void seeSched(View v){
-		String url = "https://docs.google.com/spreadsheet/ccc?key=0ArpxecvCGBoMdDJXZEc5WGowNGJWaDRzQXJJa0d6bFE#gid=0";
+		String url = "https://docs.google.com/spreadsheet/ccc?key=0AsJ5KZ8qL1lEdERMMTV0OVFhS0hESklTdUZMVmJnOXc#gid=2";
 		Intent i = new Intent(Intent.ACTION_VIEW);
 		i.setData(Uri.parse(url));
 		startActivity(i);

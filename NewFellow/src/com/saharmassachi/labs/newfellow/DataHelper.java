@@ -2,6 +2,7 @@ package com.saharmassachi.labs.newfellow;
 
 import static com.saharmassachi.labs.newfellow.Constants.PREFSNAME;
 import static com.saharmassachi.labs.newfellow.Constants.MYKEY;
+import static com.saharmassachi.labs.newfellow.Constants.MYID;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,7 +23,8 @@ import static com.saharmassachi.labs.newfellow.Constants.LAT;
 import static com.saharmassachi.labs.newfellow.Constants.LONG;
 import static com.saharmassachi.labs.newfellow.Constants.RAWLOC;
 import static com.saharmassachi.labs.newfellow.Constants.UPLOADED;
-import static com.saharmassachi.labs.newfellow.Constants.MYID;
+import static com.saharmassachi.labs.newfellow.Constants.NOTES;
+
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -147,10 +149,15 @@ public class DataHelper {
 			@Override
 			public void run() {
 				ArrayList<Contact> up = getContactsToUpload();
-				for(Contact con : up){
+				try{
+					for(Contact con : up){
 					if(Net.uploadNewContact(con, myid)){
 						markUploaded(con.getCid(), con);
+						}
 					}
+				}
+				catch(Exception e){
+					e.printStackTrace();
 				}
 			}};
 		new Thread(r).start();
@@ -348,7 +355,7 @@ public class DataHelper {
 		
 	}
 	
-	private ArrayList<Contact> getContactsToUpload(){
+	private synchronized ArrayList<Contact> getContactsToUpload(){
 		ArrayList<Contact> toreturn = new ArrayList<Contact>();
 		
 		SQLiteDatabase db = fdb.getReadableDatabase();
@@ -376,7 +383,7 @@ public class DataHelper {
 	//return all entries in the privates table
 	//but just their name, lat, long, and badge id
 	//also we won't return things without badge ids (because there's a separate function to return just those)
-	private HashMap<String, Contact> getBasicPrivateMap(){
+	private synchronized HashMap<String, Contact> getBasicPrivateMap(){
 		HashMap<String, Contact> map = new HashMap<String, Contact>();
 		String[] columns = { CID, BID, FNAME, LNAME, LAT, LONG };
 		SQLiteDatabase db = fdb.getReadableDatabase();
@@ -410,7 +417,7 @@ public class DataHelper {
 	
 	//given 2 contacts, merge them. In case of conflict, first one has precedence.
 	//we usually merge with private given precedence
-	private Contact merge(Contact A, Contact b){
+	private synchronized Contact merge(Contact A, Contact b){
 		String f = A.getfirst();
 		String l = A.getlast();
 		long badge = A.getID();
@@ -450,14 +457,22 @@ public class DataHelper {
 		else if(check(b.getFbid())){
 			m.setFbid(b.getFbid());
 		}
-		
-		m.setBase(A.getBase());
-		m.setLat(A.getLat());
-		m.setLong(A.getLong());
+		if(check(A.getNotes())){
+			m.setNotes(A.getNotes());
+		}
+		if(check(A.getBase())){
+			m.setBase(A.getBase());
+		}
+		try{
+			m.setLat(A.getLat());
+			m.setLong(A.getLong());
+		}
+		catch(Exception e){
+		}
 		return m;
 	}
 	
-	private Contact getOnePrivate(long contactid){
+	private synchronized Contact getOnePrivate(long contactid){
 		//given a contactID, return a contact corresponding to that id;
 		SQLiteDatabase db = fdb.getReadableDatabase();
 		//String[] selection = {String.valueOf(contactid)};
@@ -486,7 +501,7 @@ public class DataHelper {
 		return cursorToContact(curse, PRIVATE_TABLE);
 	}
 	
-	private Contact cursorToContact(Cursor curse, String S) throws Exception{
+	private synchronized Contact cursorToContact(Cursor curse, String S) throws Exception{
 		boolean isprivate = false;
 		if(S.equalsIgnoreCase(PRIVATE_TABLE)){  isprivate = true;}
 		else if(S.equalsIgnoreCase(PUBLIC_TABLE)){ isprivate = false;}
@@ -533,6 +548,12 @@ public class DataHelper {
 		int lng  = curse.getInt(i++);
 		String base = curse.getString(i++);
 		
+		if(isprivate){
+			String notes = curse.getString(12);
+			if(check(notes)){
+				contact.setNotes(notes);
+			}
+		}
 		
 		
 		if(check(p)){ contact.setPhone(p);}
@@ -549,7 +570,7 @@ public class DataHelper {
 		return cursorToContact(curse, PUBLIC_TABLE);
 	}
 	
-	private Contact[] getNoBadges(){
+	private synchronized Contact[] getNoBadges(){
 		SQLiteDatabase db = fdb.getReadableDatabase();
 		//String[] selection = {String.valueOf(contactid)};
 		Contact[] toreturn = null;
@@ -575,10 +596,11 @@ public class DataHelper {
 		return toreturn;
 	}
 	
-	private ContentValues contactToValues(Contact c){
+	private synchronized ContentValues contactToValues(Contact c){
 		//this sets badge ID if it exists
 		//This also sets UPLOADED to -1;
 		//it does not set cid
+		//it does set notes, if they exist
 		//fix both by removing those keys if these assumptions are not true.
 		ContentValues values = new ContentValues();
 		String b = c.getBase();
@@ -589,6 +611,7 @@ public class DataHelper {
 		int lng = c.getLong();
 		String p = c.getPhone();
 		String t = c.getTwitter();
+		String n = c.getNotes();
 		long badge = c.getID();
 		
 		if (check(b)) {
@@ -609,7 +632,9 @@ public class DataHelper {
 		if (check(t)) {
 			values.put(TWITTER, t);
 		}
-		
+		if(check(n)){
+			values.put(NOTES, n);
+		}
 		if(badge > -1){
 			values.put(BID, badge);
 			Log.e(TAG, "No badge id. This is probably an error");

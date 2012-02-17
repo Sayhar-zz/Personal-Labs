@@ -41,12 +41,11 @@ public class ShowContact extends Activity {
 	private long id;
 	private TextView[] tvs;
 	private EditText[] ets;
-	private KeyListener[] listeners;
-	private InputFilter[][] filters;
 	private TextView topName;
 	private Spinner spinner;
 	private EditText etaddress;
 
+	private Button notesbutton;
 	private boolean editMode = false;
 	private Button reset;
 	private Button savebutton;
@@ -58,6 +57,8 @@ public class ShowContact extends Activity {
 	private String email;
 	private String twitter;
 	private String base;
+	private String newnotestxt;
+	private String oldnotestxt;
 	private int oldlat;
 	private int oldlong;
 	private Contact toShow;
@@ -90,7 +91,8 @@ public class ShowContact extends Activity {
 	}
 
 	private void loadViews() {
-
+		notesbutton = (Button) findViewById(R.id.notesbutton);
+		
 		tvs = new TextView[numRows];
 		ets = new EditText[numRows];
 		// listeners = new KeyListener[numRows];
@@ -146,6 +148,7 @@ public class ShowContact extends Activity {
 		base = toShow.getBase();
 		oldlat = toShow.getLat();
 		oldlong = toShow.getLong();
+		oldnotestxt = toShow.getNotes();
 	}
 
 	private void setViews() {
@@ -155,7 +158,7 @@ public class ShowContact extends Activity {
 		ets[0].setText(fname + " " + lname);
 
 		tvs[1].setText("Phone:");
-		if (phone != null && (phone.length() > 1)) {
+		if (check(phone)) {
 			ets[1].setText(phone);
 		} else {
 			ets[1].setText("");
@@ -163,7 +166,7 @@ public class ShowContact extends Activity {
 		}
 
 		tvs[2].setText("Email:");
-		if (email != null && (email.length() > 1)) {
+		if (check(email)) {
 			ets[2].setText(email);
 		} else {
 			ets[2].setText("");
@@ -171,15 +174,17 @@ public class ShowContact extends Activity {
 		}
 
 		tvs[3].setText("Twitter:");
-		if (twitter != null && (twitter.length() > 0)) {
+		if (check(twitter)) {
 			ets[3].setText(twitter);
 		} else {
 			ets[3].setText("");
 			twitter = "";
 		}
-
-		if ((base != null) && (base.length() > 0)) {
+		if (check(base)) {
 			etaddress.setText(base);
+		}
+		if(check(oldnotestxt)){
+			newnotestxt = oldnotestxt;
 		}
 
 		getAddressInfo(etaddress);
@@ -275,7 +280,7 @@ public class ShowContact extends Activity {
 			newlat = (int) (a.getLatitude() * 1E6);
 			newlong = (int) (a.getLongitude() * 1E6);
 		}
-
+	
 		// unless all the values are the same...
 		if (!(newfname.equalsIgnoreCase(fname)
 				&& newlname.equalsIgnoreCase(lname)
@@ -283,11 +288,12 @@ public class ShowContact extends Activity {
 				&& newtwitter.equalsIgnoreCase(twitter)
 				&& newemail.equalsIgnoreCase(email) 
 				&& (oldlat == newlat) 
-				&& (oldlong == newlong))) {
+				&& (oldlong == newlong)
+				&& newnotestxt.equalsIgnoreCase(oldnotestxt))) {
 		
-
+	
 			Address a = allAddresses.get(whichAddress);
-
+	
 			newlat = (int) (a.getLatitude() * 1E6);
 			newlong = (int) (a.getLongitude() * 1E6);
 			Contact c = new Contact(toShow.getID(), newfname, newlname);
@@ -305,6 +311,9 @@ public class ShowContact extends Activity {
 				c.setLat(newlat);
 				c.setLong(newlong);
 			}
+			if(!newnotestxt.equalsIgnoreCase(oldnotestxt)){
+				c.setNotes(newnotestxt);
+			}
 			
 			email = newemail;
 			phone = newphone;
@@ -312,13 +321,44 @@ public class ShowContact extends Activity {
 			base = newbase;
 			oldlat = newlat;
 			oldlong = newlong;
-
+	
 			helper.editPrivate(c, cid);
 			showSavedAlert();
 		}
-
+	
 	}
 
+	public void notes(View v){
+	
+		Dialog dialog = new Dialog(this);
+
+		dialog.setContentView(R.layout.notesdialog);
+		dialog.setTitle("Notes");
+		final EditText notes = (EditText) dialog.findViewById(R.id.notestext);
+		if(check(newnotestxt)){
+			notes.setText(newnotestxt);
+		}
+		dialog.setCanceledOnTouchOutside(true);
+		dialog.setOnCancelListener(new DialogInterface.OnCancelListener(){
+
+
+				@Override
+				public void onCancel(DialogInterface dialog) {
+					// TODO Auto-generated method stub
+					newnotestxt = notes.getText().toString();
+					dialog.dismiss();
+				
+				}
+
+		    });
+			
+			
+		
+		dialog.show();
+		
+		
+	}
+	
 	public void Reset(View v) {
 		ets[0].setText(fname + " " + lname);
 		if (phone != null) {
@@ -331,7 +371,12 @@ public class ShowContact extends Activity {
 			ets[2].setText(email);
 		} else {
 			ets[2].setText("");
-			
+		}
+		if(oldnotestxt != null){
+			newnotestxt = oldnotestxt;
+		}
+		else{
+			newnotestxt = "";
 		}
 		if (twitter != null) {
 			ets[3].setText(twitter);
@@ -347,6 +392,7 @@ public class ShowContact extends Activity {
 		if (adapter != null) {
 			adapter.clear();
 		}
+
 	}
 
 	private void showSavedAlert() {
@@ -403,5 +449,12 @@ public class ShowContact extends Activity {
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }
+	}
+	
+	private boolean check(String s){
+		if((s != null) && (s.length() > 0)){
+			return true;
+		}
+		return false;
 	}
 }

@@ -172,6 +172,13 @@
                 android:text="@string/Location"
                 android:layout_gravity="center_vertical|center_horizontal"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
+            
+             <Button
+                        android:id="@+id/notesbutton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="notes"
+                        android:text="notes" />
 
         </TableRow>
 

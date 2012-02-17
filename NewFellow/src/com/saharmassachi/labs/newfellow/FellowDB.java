@@ -18,6 +18,7 @@ import static com.saharmassachi.labs.newfellow.Constants.PHONE;
 import static com.saharmassachi.labs.newfellow.Constants.EMAIL;
 import static com.saharmassachi.labs.newfellow.Constants.TWITTER;
 import static com.saharmassachi.labs.newfellow.Constants.FBID;
+import static com.saharmassachi.labs.newfellow.Constants.NOTES;
 //import static com.saharmassachi.labs.newfellow.Constants.PRIMARYLOC;
 
 
@@ -32,7 +33,7 @@ import static com.saharmassachi.labs.newfellow.Constants.UPLOADED;
 
 public class FellowDB extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "fellow.db";
-	private static final int DATABASE_VERSION = 1; 
+	private static final int DATABASE_VERSION = 3; 
 	private static final String TAG = "FellowDB";
 	private static FellowDB mInstance;
 
@@ -85,7 +86,8 @@ public class FellowDB extends SQLiteOpenHelper {
 		LAT + " INTEGER, " +
 		LONG + " INTEGER, " +
 		RAWLOC + " TEXT, " +
-		UPLOADED + " INTEGER);"; 
+		UPLOADED + " INTEGER, " +
+		NOTES + " TEXT);"; 
 
 	/*private String CREATE_TABLE_3 = "CREATE TABLE " + PRELOAD_TABLE + " ( " +
 		AID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +

@@ -20,6 +20,7 @@ public interface Constants extends BaseColumns {
 	public static final String FNAME = "first_name";
 	public static final String LNAME = "last_name";
 	public static final String WORK = "work";
+	public static final String NOTES = "notes";
 	
 	public static final String MYKEY= "mykey";
 	public static final String MYID= "myid";
@@ -31,5 +32,6 @@ public interface Constants extends BaseColumns {
 	public static final String PRIVATE_TABLE = "contacts";
 	public static final String PUBLIC_TABLE = "public";
 	public static final String MANUAL = "manual";
+	
 }
 

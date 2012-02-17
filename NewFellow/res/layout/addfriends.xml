@@ -119,17 +119,24 @@
                 </TableRow>
 
                 <TableRow
+                    android:id="@+id/TableRow01"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|center_horizontal" >
+                    android:layout_height="0dp"
+                    android:layout_weight="1" >
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical|center_horizontal"
                         android:layout_weight="1"
                         android:text="@string/Location"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    <Button
+                        android:id="@+id/notesbutton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="notes" />
+
                 </TableRow>
 
                 <TableRow

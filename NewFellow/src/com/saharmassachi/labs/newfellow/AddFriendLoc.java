@@ -3,6 +3,9 @@ package com.saharmassachi.labs.newfellow;
 //This is step 2 in the add step - location
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.SearchManager.OnCancelListener;
+import android.content.DialogInterface;
 import android.content.Intent;
 
 import java.io.IOException;
@@ -47,6 +50,7 @@ public class AddFriendLoc extends Activity implements OnClickListener {
 	private String fname;
 	private String lname;
 	
+	private Button notesbutton;
 	private EditText etaddress;
 	private EditText etPhone;
 	private TextView etEmail;
@@ -60,6 +64,7 @@ public class AddFriendLoc extends Activity implements OnClickListener {
 	private int oldlong;
 	private int newlat;
 	private int newlong;
+	private String notestxt;
 	private Address newAddress;
 	
 	private long id;
@@ -151,6 +156,32 @@ public class AddFriendLoc extends Activity implements OnClickListener {
 
 	public void onClick(View v) {
 		switch (v.getId()) {
+		case R.id.notesbutton:
+			Dialog dialog = new Dialog(this);
+
+			dialog.setContentView(R.layout.notesdialog);
+			dialog.setTitle("Notes");
+			final EditText notes = (EditText) dialog.findViewById(R.id.notestext);
+			if(check(notestxt)){
+				notes.setText(notestxt);
+			}
+			dialog.setCanceledOnTouchOutside(true);
+			dialog.setOnCancelListener(new DialogInterface.OnCancelListener(){
+
+
+					@Override
+					public void onCancel(DialogInterface dialog) {
+						// TODO Auto-generated method stub
+						notestxt = notes.getText().toString();
+						dialog.dismiss();
+					}
+			    });
+				
+				
+			
+			dialog.show();
+			
+			break;
 		case R.id.friendDbAdd:
 			
 			newAddress = allAddresses.get(whichAddress);
@@ -199,10 +230,14 @@ public class AddFriendLoc extends Activity implements OnClickListener {
 		if((oldlat != newlat) && (oldlong != newlong)){
 			contact.setLat(newlat);
 			contact.setLong(newlong);
-			contact.setBase(etaddress.getText().toString());
+			contact.setBase(etaddress.getText().toString().trim());
 		}
 		if(id < 0){
 			contact.setID(-1);
+		}
+		
+		if(check(notestxt)){
+			contact.setNotes(notestxt);
 		}
 		return contact;
 		
@@ -216,6 +251,7 @@ public class AddFriendLoc extends Activity implements OnClickListener {
 	
 	
 	private void loadViews(){
+		notesbutton = (Button) findViewById(R.id.notesbutton);
 		etEmail = (TextView) findViewById(R.id.getemail);
 		etTweet = (TextView) findViewById(R.id.gettwitter);
 		etPhone = (EditText) findViewById(R.id.getphone);
@@ -231,6 +267,7 @@ public class AddFriendLoc extends Activity implements OnClickListener {
 	
 	private void init(){
 		addToDB.setOnClickListener(this);
+		notesbutton.setOnClickListener(this);
 		
 		Bundle extras = getIntent().getExtras();
 		
@@ -275,7 +312,7 @@ public class AddFriendLoc extends Activity implements OnClickListener {
 	
 	// given string s - is it not null and length > 0?
 	private boolean check(String s){
-		if((s != null) && (s.length() > 1)){
+		if((s != null) && (s.length() > 0)){
 			return true;
 		}
 		return false;

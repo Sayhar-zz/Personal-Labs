@@ -9,6 +9,7 @@ public class Contact {
 	String phone = null;
 	String email = null;
 	String basename = null;
+	String notes = null;
 	int lat = 0;
 	int lng = 0;
 	long cid;
@@ -48,7 +49,9 @@ public class Contact {
 	public String getlast(){
 		return last;
 	}
-	
+	public String getNotes(){
+		return notes;
+	}
 	public String getFbid(){
 		return fbid;
 	}
@@ -103,7 +106,9 @@ public class Contact {
 	public void setTwitter(String t){
 		twitter = t;
 	}
-	
+	public void setNotes(String s){
+		notes = s;
+	}
 	public String toString(){
 		String s = "[ ";
 		s += badgeID + ", ";
