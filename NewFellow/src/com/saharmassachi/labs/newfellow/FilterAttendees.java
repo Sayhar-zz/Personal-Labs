@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -25,12 +26,14 @@ import static com.saharmassachi.labs.newfellow.Constants.LNAME;
 import static com.saharmassachi.labs.newfellow.Constants.MANUAL;
 
 public class FilterAttendees extends ListActivity {
+	private static final String TAG = "FILTER";
 	DataHelper helper;
 	private EditText filterText = null;
 	ArrayAdapter<String> adapter = null;
 	int pos = 0;
 	Context ctx;
 	private Intent nextPage;
+	private boolean alertshown;
 	private HashMap<String, Long> map;
 	Contact[] contacts;
 
@@ -83,20 +86,31 @@ public class FilterAttendees extends ListActivity {
 	public void manualAdd(View v) {
 		
 		String name = filterText.getText().toString().trim();
+		nextPage.removeExtra(BID);
+		nextPage.removeExtra(FNAME);
+		nextPage.removeExtra(LNAME);
 		try{
 			Long code = Long.parseLong(name);
 			//if the name is parseable as a long (aka if it is a number) then it is a badgeid
 			//do that instead.
-			nextPage.removeExtra(BID);
+			
 			nextPage.putExtra(BID, code);
 			startActivity(nextPage);
 			return;
 		}
-		catch(Exception e){
-			
-		}
-		if(name.length() == 0){ return;} //button is useless when there is nothing written 
+		catch(Exception e){}
 		
+		if(name.length() == 0){ return;} //button is useless when there is nothing written 
+		if(!adapter.isEmpty()){
+			//
+			if(!alertshown){
+				showManualAlert();
+				alertshown = true;
+				return;
+			}
+			
+			Log.d(TAG, "adding even though there's a possibilities");
+		}
 		String[] names = name.split(" ", 2);
 		nextPage.putExtra(FNAME, names[0]);
 		if(names.length == 2){ 
@@ -108,7 +122,9 @@ public class FilterAttendees extends ListActivity {
 
 	
 	private void init(){
+		
 		ctx = this;
+		alertshown = false;
 		filterText = (EditText) findViewById(R.id.search_line);
 		filterText.addTextChangedListener(filterTextWatcher);
 		
@@ -125,6 +141,10 @@ public class FilterAttendees extends ListActivity {
 		lv.setTextFilterEnabled(true);
 		nextPage = new Intent(this, AddFriendLoc.class);
 
+		nextPage.removeExtra(BID);
+		nextPage.removeExtra(FNAME);
+		nextPage.removeExtra(LNAME);
+
 		lv.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
@@ -132,12 +152,26 @@ public class FilterAttendees extends ListActivity {
 				String name = tview.getText().toString();
 				final String fname = name.split(" ")[0];
 				final String lname = name.split(" ")[1];
-				nextPage.putExtra(FNAME, fname);
-				nextPage.putExtra(LNAME, lname);
+				
 				nextPage.putExtra(BID, map.get(name));
 				startActivity(nextPage);
 			}
 		});
+
+	}
+	
+	private void showManualAlert() {
+		
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage("If the person you're trying to add is shown, we highly recommend you add them by clicking their name, and not by clicking the add button. If you're trying to add someone who isn't shown below, I apologize for getting in the way of your workflow.").setCancelable(false)
+				.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						
+						dialog.cancel();
+					}
+				});
+		AlertDialog alert = builder.create();
+		alert.show();
 
 	}
 }

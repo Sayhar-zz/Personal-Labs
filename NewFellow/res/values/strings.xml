@@ -14,10 +14,11 @@
  	<string name="askemail">Email?</string>
  	<string name="asktwitter">Twitter?</string>
  	<string name="dbadd">Add to Database</string>
- 	<string name="manualAdd">Add Manually</string>
+ 	<string name="manualAdd">Add</string>
  	<string name="check">Check</string>
  	<string name="Location">Home Base:</string>
  	<string name="save">Save</string>
  	<string name="askBadge">Badge ID?</string>
  	<string name="askName">Name?</string>
+ 	<string name="filtertext">name or badgeID</string>
 </resources>

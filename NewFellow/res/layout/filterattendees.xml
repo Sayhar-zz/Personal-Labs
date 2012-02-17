@@ -17,11 +17,10 @@
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/manualAdd"
             android:layout_toLeftOf="@+id/manualAdd"
-            android:hint="type here to filter"
             android:inputType="text"
             android:maxLines="1"
-            android:singleLine="true" >
-
+            android:singleLine="true"
+            android:hint="@string/filtertext">
             <requestFocus />
         </EditText>
 
