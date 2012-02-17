@@ -3,6 +3,8 @@ package com.saharmassachi.labs.newfellow;
 //This is step 2 in the add step - location
 
 import android.app.Activity;
+import android.content.Intent;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -168,6 +170,8 @@ public class AddFriendLoc extends Activity implements OnClickListener {
 			Contact tmp = helper.getContact(j);
 			
 			tv1.append(tmp.toString());
+			Intent i = new Intent(this, FriendsMap.class);
+			startActivity(i);
 			break;
 		}
 

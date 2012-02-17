@@ -6,6 +6,7 @@ import static com.saharmassachi.labs.newfellow.Constants.MYKEY;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.UUID;
 
 import static com.saharmassachi.labs.newfellow.Constants.BID;
 import static com.saharmassachi.labs.newfellow.Constants.PRIVATE_TABLE;
@@ -52,7 +53,7 @@ public class DataHelper {
 	// editPrivate = edit a contact row (update to the new info attached)
 	// )
 
-	public void downPublic() {
+	public synchronized void downPublic() {
 		//clear the current public database;
 		try{
 			SQLiteDatabase db = fdb.getWritableDatabase();
@@ -63,9 +64,9 @@ public class DataHelper {
 		}
 		ArrayList<Contact> publics = Net.downPublic();
 
-		SQLiteDatabase db = fdb.getWritableDatabase(); // write to the table
-		try {
+		
 			for (Contact c : publics) {
+				SQLiteDatabase db = fdb.getWritableDatabase(); // write to the table
 				ContentValues values = contactToValues(c);
 				
 					try {
@@ -74,18 +75,22 @@ public class DataHelper {
 						db.insertOrThrow(PUBLIC_TABLE, null, values);
 					} catch (Exception e) {
 						e.printStackTrace();
+					}	finally{
+						db.close();
 					}
 				
 			}
-		} finally {
-			db.close();
-		}
+		
 
 	}
 
 	
 	public void downPrivate() {
 		Net.downPrivate();
+	}
+	
+	public boolean register(long badge, UUID id){
+		return Net.register(String.valueOf(badge), id.toString());
 	}
 
 	public boolean login(Contact c) {
@@ -99,7 +104,7 @@ public class DataHelper {
 	}
 
 	
-	public void deleteContact(long cid){
+	public synchronized void deleteContact(long cid){
 		
 		SQLiteDatabase db = fdb.getWritableDatabase();
 		try{
@@ -114,7 +119,7 @@ public class DataHelper {
 	}
 	
 	// putPrivate = save a new contact, and send it to the server
-	public long putPrivate(Contact c) {
+	public synchronized long putPrivate(Contact c) {
 		long toreturn;
 		
 		ContentValues values = new ContentValues();
@@ -240,7 +245,7 @@ public class DataHelper {
 	
 	
 	//editPrivate = edit a contact row (update to the new info attached)
-	public void editPrivate(Contact c, long cid){
+	public synchronized void editPrivate(Contact c, long cid){
 		
 		ContentValues values = contactToValues(c);
 		values.put(CID, cid);

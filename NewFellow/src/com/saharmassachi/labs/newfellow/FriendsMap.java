@@ -7,6 +7,9 @@ import static com.saharmassachi.labs.newfellow.Constants.PREFSNAME;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -44,7 +47,9 @@ public class FriendsMap extends MapActivity {
 	private Handler handler;
 	//ZoomPanListener zpl;
 	//protected Handler handler = new Handler();
-	
+	final Lock lock = new ReentrantLock();
+	final Condition doneLoad  = lock.newCondition(); 
+	 
 	
 	/**
 	 * Initializes Activity
@@ -54,6 +59,7 @@ public class FriendsMap extends MapActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map);
 
+		
 		etSearch = (EditText) findViewById(R.id.searchMap);
 		streetView = 1;
 		initMapView();
@@ -70,17 +76,19 @@ public class FriendsMap extends MapActivity {
 		SharedPreferences settings = getSharedPreferences(PREFSNAME, 0);
 		if (!(settings.contains(MYKEY))) {
 			
-			Runnable r = new Runnable() {
+			/*Runnable r = new Runnable() {
 				@Override
 				public void run() {
 			    	datahelper.downPublic();
 				}};
 			new Thread(r).start();
-				
+				*/
 				
 			Intent i = new Intent(this, Login.class);
 			startActivity(i);
 		}
+		
+		
 		
 		//SharedPreferences settings = getSharedPreferences(PREFSNAME, 0);
 		Editor e = settings.edit();
@@ -95,7 +103,7 @@ public class FriendsMap extends MapActivity {
 
 	private void initOverlays(){
 		mapOverlays = map.getOverlays();
-		drawable = this.getResources().getDrawable(R.drawable.androidmarker);
+		drawable = this.getResources().getDrawable(R.drawable.roots_pin_grey);
 		itemizedoverlay = new ItemizedContactOverlay(drawable, this);
 	}
 	

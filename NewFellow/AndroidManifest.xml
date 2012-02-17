@@ -19,7 +19,8 @@
         <activity
             android:label="AddFriendLoc"
             android:name="AddFriendLoc"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden|adjustPan"
+       		/>
         <activity
             android:label="nearFriends"
             android:name="nearFriends" />
@@ -59,7 +60,8 @@
 		<activity
             android:label="ShowContact"
             android:name="ShowContact"
-            android:windowSoftInputMode="stateHidden" />
+  			android:windowSoftInputMode="stateHidden|adjustPan"
+            />
 		
         
         <uses-library android:name="com.google.android.maps" />
