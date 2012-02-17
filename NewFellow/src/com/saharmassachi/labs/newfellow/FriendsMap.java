@@ -1,6 +1,7 @@
 package com.saharmassachi.labs.newfellow;
 
 import static com.saharmassachi.labs.newfellow.Constants.MYID;
+import static com.saharmassachi.labs.newfellow.Constants.MYKEY;
 import static com.saharmassachi.labs.newfellow.Constants.PREFSNAME;
 
 import java.sql.Timestamp;
@@ -9,6 +10,7 @@ import java.util.List;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -39,6 +41,7 @@ public class FriendsMap extends MapActivity {
 	boolean goToMyLocation;
 	private DataHelper datahelper;
 	private EditText etSearch;
+	private Handler handler;
 	//ZoomPanListener zpl;
 	//protected Handler handler = new Handler();
 	
@@ -52,15 +55,37 @@ public class FriendsMap extends MapActivity {
 		setContentView(R.layout.map);
 
 		etSearch = (EditText) findViewById(R.id.searchMap);
+		streetView = 1;
 		initMapView();
 		initOverlays();
 		initMyLocation();
 		goToMyLocation();
-		streetView = 0;
+		
 		center = new GeoPoint(-1,-1);
 		zoomLevel = map.getZoomLevel();
 		datahelper = new DataHelper(this);
 		mapOverlays.add(itemizedoverlay);
+		handler = new Handler();
+		
+		SharedPreferences settings = getSharedPreferences(PREFSNAME, 0);
+		if (!(settings.contains(MYKEY))) {
+			
+			Runnable r = new Runnable() {
+				@Override
+				public void run() {
+			    	datahelper.downPublic();
+				}};
+			new Thread(r).start();
+				
+				
+			Intent i = new Intent(this, Login.class);
+			startActivity(i);
+		}
+		
+		//SharedPreferences settings = getSharedPreferences(PREFSNAME, 0);
+		Editor e = settings.edit();
+		e.remove(MYKEY); //this is so we go through intro every time. //TEMP //TODO fix later
+		e.commit();
 	}
 	
 	@Override
@@ -204,7 +229,8 @@ public class FriendsMap extends MapActivity {
 		super.onResume();
 		
 		userLocationOverlay.enableMyLocation();
-		
+		Contact[] plottables = datahelper.getBasicContacts();
+		overlayAdder(plottables, itemizedoverlay);
 		
 		
 	}

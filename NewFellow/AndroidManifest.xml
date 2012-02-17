@@ -29,11 +29,7 @@
         <activity
             android:label="Splash"
             android:name="Splash" >
-             <intent-filter >
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+             
             
             </activity>
         <activity
@@ -43,8 +39,12 @@
         <activity
             android:label="FriendsMap"
             android:name="FriendsMap"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:screenOrientation="portrait" /> 
+            android:screenOrientation="portrait">
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter> 
+          </activity> 
            
             
         <activity

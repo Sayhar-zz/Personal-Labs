@@ -120,6 +120,7 @@ public class Login extends Activity {
 	
 	public void save(View v){
 		uploadMyInfo();
+		
 		Intent i = new Intent(this, FriendsMap.class);
 		startActivity(i);
 	}
@@ -177,14 +178,21 @@ public class Login extends Activity {
 		
 		key = UUID.randomUUID();
 		final Context ctx = this;
-		/*Runnable r = new Runnable() {
+		
+		SharedPreferences settings = ctx.getSharedPreferences(PREFSNAME, 0);
+		Editor e = settings.edit();
+		e.putString(MYKEY, key.toString());
+		e.commit();
+		
+		Runnable r = new Runnable() {
 			@Override
 			public void run() {
-				Contact me = new Contact(BID, fname, lname);
+				//TODO there is so much wrong here
+				Contact me = new Contact(-1, fname, lname);
 				me.setFbid("sahar.massachi");
 				me.setPhone("555989009");
 				me.setTwitter("sayhar");
-				h.uploadMyInfo(me);
+				//h.uploadMyInfo(me);
 				
 				//so we only do this once.
 				SharedPreferences settings = ctx.getSharedPreferences(PREFSNAME, 0);
@@ -193,7 +201,7 @@ public class Login extends Activity {
 				e.commit();
 			}
 		};
-		new Thread(r).start();*/
+		new Thread(r).start();
 	}
 	
 	public void getAddressInfo(View v) {
