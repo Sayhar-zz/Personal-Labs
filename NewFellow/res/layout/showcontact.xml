@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/greyleaf2"
-    >
-<LinearLayout
+    android:orientation="vertical"
+    android:background="@drawable/greyleaf2" >
+    <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
-	<TableLayout
+    android:layout_height="match_parent">
+
+    <TableLayout
         android:id="@+id/tableLayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,16 +20,15 @@
             android:id="@+id/tableRow0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
             android:gravity="center_vertical|center_horizontal" >
 
             <TextView
                 android:id="@+id/topName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Please enter your public info:"
-                android:textAppearance="?android:attr/textAppearanceMedium"/>
+                android:text=""
+                
+                android:textAppearance="?android:attr/textAppearanceLarge"/>
 
         </TableRow>
 
@@ -58,7 +59,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_weight="2"
                 android:inputType="textPersonName"
-                android:hint="your name"
+                android:text="Medium Text"
                 android:textAppearance="?android:attr/textAppearanceMedium"/>
 
         </TableRow>
@@ -90,7 +91,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_weight="2"
                 android:inputType="number"
-                android:hint="your phone number"
+                android:text="Medium Text"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
         </TableRow>
@@ -121,7 +122,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_weight="2"
                 android:inputType="textEmailAddress"
-                android:hint="your email"
+                android:text="email"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
         </TableRow>
@@ -152,7 +153,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_weight="2"
                 android:inputType="textEmailAddress"
-                android:hint="your twitter handle"
+                android:text="Medium Text"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
         </TableRow>
@@ -161,14 +162,14 @@
             android:id="@+id/tableRow7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal" >
+            android:layout_gravity="center_vertical|center_horizontal" >
 
             <TextView
                 android:id="@+id/textView1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="What is your home base?"
+                android:text="@string/Location"
                 android:layout_gravity="center_vertical|center_horizontal"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -181,20 +182,22 @@
 
             <EditText
                 android:id="@+id/etaddress"
-                android:layout_width="0dp"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:hint="your address, city, or place of work"
+                android:layout_weight="3"
                 android:inputType="textPostalAddress" >
+
+                
             </EditText>
 
             <Button
                 android:id="@+id/checkLoc"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:onClick="getAddressInfo"
                 android:text="@string/check" />
+
         </TableRow>
 
         <TableRow
@@ -214,16 +217,33 @@
             android:id="@+id/tableRow5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
+
+            <Button
+                android:id="@+id/resetButton"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Reset"
+                android:onClick="Reset" />
+
+            <CheckBox
+                android:id="@+id/toggleEdit"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:onClick="toggleEditMode"
+                android:text="Edit Mode"
+                android:visibility="invisible" />
+
+            <Button
+                android:id="@+id/saveButton"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="Save"
+                android:text="@string/save" />
+
         </TableRow>
                 
     </TableLayout>
-    <Button
-        android:id="@+id/goMain"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:onClick="save"
-        android:visibility="invisible"
-        android:text="@string/save" />
 
+        
 </LinearLayout>
 </ScrollView>

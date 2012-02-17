@@ -5,6 +5,13 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
+    <!-- Sahar's API key: 0_9Pks7VkRuhX3CGkkeQsPHyWtt26wWT8sI_Sig
+	android:apiKey="0_9Pks7VkRuhX3CGkkeQsPHyWtt26wWT8sI_Sig"
+	
+	Final API key that works for the app itself:
+	0_9Pks7VkRugmXYwlX2CugogGcGPuoYM8ln0XIg
+	android:apiKey="0_9Pks7VkRugmXYwlX2CugogGcGPuoYM8ln0XIg" 
+	-->
     <view
         android:id="@+id/themap"
         android:layout_width="fill_parent"
@@ -29,7 +36,7 @@
 			<EditText android:id="@+id/searchMap"
             	android:layout_width="fill_parent"
             	android:layout_height="wrap_content"
-            	android:layout_weight="3.0"
+            	android:layout_weight="1.0"
             	android:textSize="12sp" 
             	android:singleLine="true"
             	
@@ -73,7 +80,16 @@
            		    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/happytoggle"
-                    android:layout_marginRight="10dp" />
+                    android:layout_marginRight="10dp"
+                    android:onClick="seeContacts" />
+        	
+        	<Button android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:background="@drawable/historybook"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="10dp"
+                    android:onClick="seeSched" />
 		</TableRow>  
 	</TableLayout>
 	

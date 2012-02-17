@@ -1,11 +1,7 @@
 package com.saharmassachi.labs.newfellow;
 
 import java.util.ArrayList;
-
-import org.json.JSONException;
-
-import com.saharmassachi.labs.newfellow.book.FriendsGetProfilePics;
-import com.saharmassachi.labs.newfellow.book.Utility;
+import java.util.HashMap;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
@@ -16,99 +12,49 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-import static com.saharmassachi.labs.newfellow.Constants.NAME;
-import static com.saharmassachi.labs.newfellow.Constants.CID;
+import static com.saharmassachi.labs.newfellow.Constants.BID;
+import static com.saharmassachi.labs.newfellow.Constants.FNAME;
+import static com.saharmassachi.labs.newfellow.Constants.LNAME;
+import static com.saharmassachi.labs.newfellow.Constants.MANUAL;
 
 public class FilterAttendees extends ListActivity {
-	DBhelper helper;
+	DataHelper helper;
 	private EditText filterText = null;
 	ArrayAdapter<String> adapter = null;
 	int pos = 0;
 	Context ctx;
 	private Intent nextPage;
-	long[] ids;
-	
+	private HashMap<String, Long> map;
+	Contact[] contacts;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		helper = new DBhelper(this);
+		helper = new DataHelper(this);
 		setContentView(R.layout.filterattendees);
-		ctx = this;
-		filterText = (EditText) findViewById(R.id.search_line);
-		filterText.addTextChangedListener(filterTextWatcher);
-
-		adapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, getStringArrayList());
-		setListAdapter(adapter);
-		ProgressDialog dialog = ProgressDialog.show(this, "",
-				"Loading contacts", true, true);
-		while (adapter.isEmpty()) {
-			dialog.show();
+		init();
+		
 		}
-		dialog.dismiss();
-
-		ListView lv = getListView();
-		lv.setTextFilterEnabled(true);
-		nextPage = new Intent(this, AddFriendLoc.class);
-
-		lv.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				final String name = (String) ((TextView) view).getText();
-				pos = parent.getPositionForView(view);
-				
-				new AlertDialog.Builder(ctx)
-				.setTitle("Is this it?")
-				.setMessage(
-						String.format(
-								"Is %1$s the person you are thinking of?",
-								name))
-								.setPositiveButton(R.string.yes,
-										new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog,
-											int which) {
-										Bundle params = new Bundle();
-										nextPage.putExtra(NAME, name);
-										nextPage.putExtra(CID, ids[pos]);
-										startActivity(nextPage);
-									}
-
-								}).setNegativeButton(R.string.no, null).show();
-			}
-		});
-	}
 
 	private String[] getStringArrayList() {
 		// get all attendees
-
-		Contact[] contacts = helper.getAllAttendees();
+		map = new HashMap<String, Long>();
+		contacts = helper.getAllBasicPublic(); 
 		String[] toReturn = new String[contacts.length];
-		ids = new long[contacts.length];
-		for (int i = 0; i<contacts.length; i++){
+		
+		for(int i = 0; i < contacts.length; i++){
 			toReturn[i] = contacts[i].getName();
-			ids[i] = contacts[i].getID();
+			map.put(toReturn[i], contacts[i].getID());
+			//map will remember the associations
 		}
 		
-		//ids = s[0];
-		
-		// ArrayList[] ss;
-		// ss[1] == attendee name
-		// ss[0] == attendee id;
-		// 
 		return toReturn;
 	}
 
@@ -134,4 +80,53 @@ public class FilterAttendees extends ListActivity {
 		filterText.removeTextChangedListener(filterTextWatcher);
 	}
 
+	public void manualAdd(View v) {
+		
+		String name = filterText.getText().toString().trim();
+		
+		if(name.length() == 0){ return;} //button is useless when there is nothing written 
+		
+		String[] names = name.split(" ", 2);
+		nextPage.putExtra(FNAME, names[0]);
+		if(names.length == 2){ 
+			nextPage.putExtra(LNAME, names[1]);	
+		}
+		nextPage.putExtra(MANUAL, true);
+		startActivity(nextPage);
+	}
+
+	
+	private void init(){
+		ctx = this;
+		filterText = (EditText) findViewById(R.id.search_line);
+		filterText.addTextChangedListener(filterTextWatcher);
+		
+		ProgressDialog dialog = ProgressDialog.show(this, "",
+				"Loading contacts", true, true);
+		
+		adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_list_item_1, getStringArrayList());
+		setListAdapter(adapter);
+		
+		dialog.dismiss();
+
+		ListView lv = getListView();
+		lv.setTextFilterEnabled(true);
+		nextPage = new Intent(this, AddFriendLoc.class);
+
+		lv.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				TextView tview = (TextView) view;
+				String name = tview.getText().toString();
+				final String fname = name.split(" ")[0];
+				final String lname = name.split(" ")[1];
+				nextPage.putExtra(FNAME, fname);
+				nextPage.putExtra(LNAME, lname);
+				nextPage.putExtra(BID, map.get(name));
+				startActivity(nextPage);
+			}
+		});
+
+	}
 }

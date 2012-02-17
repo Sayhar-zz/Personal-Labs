@@ -1,15 +1,21 @@
 package com.saharmassachi.labs.newfellow;
 
 import static com.saharmassachi.labs.newfellow.Constants.MYID;
+import static com.saharmassachi.labs.newfellow.Constants.MYKEY;
 import static com.saharmassachi.labs.newfellow.Constants.PREFSNAME;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,15 +38,18 @@ public class FriendsMap extends MapActivity {
 	MyLocationOverlay userLocationOverlay;
 	List<Overlay> mapOverlays;
 	ItemizedContactOverlay itemizedoverlay;
-	Drawable drawable;
+	private Drawable drawable;
 	protected MapController controller;
 	int streetView;
 	boolean goToMyLocation;
-	DBhelper datahelper;
-	EditText etSearch;
+	private DataHelper datahelper;
+	private EditText etSearch;
+	private Handler handler;
 	//ZoomPanListener zpl;
 	//protected Handler handler = new Handler();
-	
+	final Lock lock = new ReentrantLock();
+	final Condition doneLoad  = lock.newCondition(); 
+	 
 	
 	/**
 	 * Initializes Activity
@@ -50,35 +59,41 @@ public class FriendsMap extends MapActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map);
 
+		
 		etSearch = (EditText) findViewById(R.id.searchMap);
-		//instantiates HappyData and creates an arraylist of all the bottles
-		//HappyData datahelper = new HappyData(this);
-		//ArrayList<HappyBottle> plottables = datahelper.getMyHistory();
-		//initialize and display map view and user location
+		streetView = 1;
 		initMapView();
 		initOverlays();
 		initMyLocation();
 		goToMyLocation();
-		streetView = 0;
+		
 		center = new GeoPoint(-1,-1);
 		zoomLevel = map.getZoomLevel();
-		datahelper = new DBhelper(this);
-		makeDownloadThread();
-		
-		ArrayList<SimpleContact> plottables = datahelper.getAllSimpleContacts();  
-//			new ArrayList<SimpleContact>();   //datahelper.getMyHistory();
-		//plottables.add(new SimpleContact(11,13,"brandon", "Southwood plantation road", 1,1));
-		overlayAdder(plottables, itemizedoverlay);
-		
+		datahelper = new DataHelper(this);
 		mapOverlays.add(itemizedoverlay);
+		handler = new Handler();
+		
+		SharedPreferences settings = getSharedPreferences(PREFSNAME, 0);
+		if (!(settings.contains(MYKEY))) {
+			
+			/*Runnable r = new Runnable() {
+				@Override
+				public void run() {
+			    	datahelper.downPublic();
+				}};
+			new Thread(r).start();
+				*/
+				
+			Intent i = new Intent(this, Login.class);
+			startActivity(i);
+		}
 		
 		
 		
-		//temporary:
-		/*GeoPoint point = new GeoPoint(19240000,-99120000);
-		OverlayItem overlayitem = new OverlayItem(point, "Hola, Mundo!", "I'm in Mexico City!");
-		itemizedoverlay.addToOverlay(overlayitem);
-		mapOverlays.add(itemizedoverlay);*/
+		//SharedPreferences settings = getSharedPreferences(PREFSNAME, 0);
+		Editor e = settings.edit();
+		e.remove(MYKEY); //this is so we go through intro every time. //TEMP //TODO fix later
+		e.commit();
 	}
 	
 	@Override
@@ -88,7 +103,7 @@ public class FriendsMap extends MapActivity {
 
 	private void initOverlays(){
 		mapOverlays = map.getOverlays();
-		drawable = this.getResources().getDrawable(R.drawable.androidmarker);
+		drawable = this.getResources().getDrawable(R.drawable.roots_pin_grey);
 		itemizedoverlay = new ItemizedContactOverlay(drawable, this);
 	}
 	
@@ -135,17 +150,19 @@ public class FriendsMap extends MapActivity {
 	
 	
 	
-	protected synchronized void overlayAdder(ArrayList<SimpleContact> toshow, ItemizedContactOverlay overlay){ 
+	protected synchronized void overlayAdder(Contact[] toshow, ItemizedContactOverlay overlay){ 
 		if (toshow == null) {return; }///THIS IS A PROBLEM AND SHOULD NEVER HAPPEN
 		
-		for(SimpleContact contact : toshow) {
+		for(Contact contact : toshow) {
 			
-			String locationString = contact.getAddress(); 
+			String locationString = contact.getBase(); 
 			int latitude = contact.getLat();
 			int longitude = contact.getLong();
 			GeoPoint point = new GeoPoint(latitude,longitude);
 			String S = (contact.getName());
-			long cid = contact.getCid();
+			long cid = contact.getCid(); 
+			//I was worried a while about some contacts not having a cid. But that's SILLY! 
+			//if you're on the map, then you must have a cid.
 			overlay.addToOverlay(new ContactOverlayItem(point, S, locationString, cid));
 		}
 	}
@@ -167,41 +184,25 @@ public class FriendsMap extends MapActivity {
 		map.getOverlays().add(userLocationOverlay); //adds the users location overlay to the overlays being displayed
 	}
 
-	/*
-	//Our version of a listener - checks to see if the user moved.
-	private class ZoomPanListener extends AsyncTask<Void, Void, Void>{
-		@Override
-		protected Void doInBackground(Void... params) {
-			while(true){
-				if(zoomLevel != map.getZoomLevel()) {
-					handler.post(new Runnable(){
-						@Override
-						public void run(){
-							mapClear();
-							zoomLevel = map.getZoomLevel();}
-								
-					});	}
-				
-				if(isMoved() ){
-					drawRecentLocal();
-				}
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}}}}
-	
-	*/
 	
 	public void mapSearch(View v){
 		mapClear();
 		String searchString = etSearch.getText().toString();
-		ArrayList<SimpleContact> plottables;
+		Contact[] plottables;
 		if (searchString.length() == 0){
-			plottables = datahelper.getAllSimpleContacts();
+			plottables = datahelper.getBasicContacts();
+			
 		}
 		else{
-			plottables = datahelper.search(searchString);
+			//TODO
+			String[] searches = searchString.split(" ");
+			ArrayList<Contact> plots = new ArrayList<Contact>();
+			for (String s : searches){
+				plots.addAll(datahelper.search(s));
+			}
+			plottables = new Contact[plots.size()];
+			plots.toArray(plottables);
+			
 		}
 		overlayAdder(plottables, itemizedoverlay);
 		
@@ -217,19 +218,6 @@ public class FriendsMap extends MapActivity {
 		filter.clear();*/
 	}
 	
-	
-	
-	private void makeDownloadThread() {
-		// TODO in the future this will not call h.getAllAttendees but a different method.
-		
-		Runnable r = new Runnable() {
-			@Override
-			public void run() {
-				datahelper.downAllAttendees();
-			}
-		};
-		new Thread(r).start();
-	}
 	
 	
 	
@@ -249,21 +237,26 @@ public class FriendsMap extends MapActivity {
 		super.onResume();
 		
 		userLocationOverlay.enableMyLocation();
-//		zpl = new ZoomPanListener();
-//		zpl.execute(null);
+		Contact[] plottables = datahelper.getBasicContacts();
+		overlayAdder(plottables, itemizedoverlay);
 		
-		SharedPreferences settings = getSharedPreferences(PREFSNAME, 0);
-		if (!settings.contains(MYID)) {
-			Intent i = new Intent(this, Login.class);
-			startActivity(i);
-
-		} 
+		
 	}
 
 	public void goAddNew(View v){
-    	//Intent i = new Intent(this, AddName.class);
 		Intent i = new Intent(this, FilterAttendees.class);
     	startActivity(i);
     }
 
+	public void seeContacts(View v){
+		Intent i = new Intent(this, ViewContacts.class);
+    	startActivity(i);
+	}
+	
+	public void seeSched(View v){
+		String url = "https://docs.google.com/spreadsheet/ccc?key=0ArpxecvCGBoMdDJXZEc5WGowNGJWaDRzQXJJa0d6bFE#gid=0";
+		Intent i = new Intent(Intent.ACTION_VIEW);
+		i.setData(Uri.parse(url));
+		startActivity(i);
+	}
 }
